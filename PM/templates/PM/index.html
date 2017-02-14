@@ -1,0 +1,7 @@
+<h1>This is query demo</h1>
+
+<form action="{% url 'PM:result' serial_num %}" method="get">
+    {% csrf_token %}
+    <input type = "text" name = "serialNum" value = "put serial number here"/>
+    <input type = "submit" value = "query" />
+</form>
