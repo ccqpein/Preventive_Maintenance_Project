@@ -10,7 +10,7 @@ def index(request):
 
 
 @login_required(login_url="/query/login/")
-@permission_required('PM.view', login_url='/query/login/')
+@permission_required('PM.view_Equipment', login_url='/query/login/')
 def result(request, serial_num):
     serial_num = request.GET['serialNum']
     equipment = get_object_or_404(Equipment, serial_num=serial_num)

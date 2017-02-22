@@ -7,7 +7,7 @@ class Equipment(models.Model):
 
     class Meta:
         permissions = (
-            ("view", "Can view equipments"),
+            ("view_Equipment", "Can view equipments"),
         )
 
     serial_num = models.CharField(max_length=100)
