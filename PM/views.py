@@ -9,8 +9,8 @@ def index(request):
     return render(request, 'PM/index.html')
 
 
-@login_required(login_url="/query/login/")
-@permission_required('PM.view_Equipment', login_url='/query/login/')
+@login_required(login_url="/login/")
+@permission_required('PM.view_Equipment', login_url='/login/')
 def result(request, serial_num):
     serial_num = request.GET['serialNum']
     equipment = get_object_or_404(Equipment, serial_num=serial_num)
