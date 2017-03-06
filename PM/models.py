@@ -11,5 +11,11 @@ class Equipment(models.Model):
         )
 
     serial_num = models.CharField(max_length=100)
-    name = models.CharField(max_length=100)
+    eq_name = models.CharField(max_length=100)
+    eq_type = models.CharField(max_length=100)
     quantity_left = models.IntegerField(default=0)
+
+
+class Equipment_tool(models.Model):
+    tool_name = models.CharField(max_length=100)
+    tool_type = models.CharField(max_length=100)
