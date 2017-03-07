@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+	<meta charset="utf-8" />
+    <style type="text/css">
+        #Text1 {
+            width: 178px;
+        }
+        #Text2 {
+            width: 178px;
+        }
+        #Text3 {
+            width: 178px;
+        }
+        #Text4 {
+            width: 178px;
+        }
+        #Text5 {
+            width: 178px;
+        }
+        #Text6 {
+            width: 178px;
+        }
+        #Text7 {
+            width: 178px;
+        }
+    </style>
+</head>
+<body>
+
+    <p>Add New User</p>
+    
+    <form action = "" method = "post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <p>
+            <input id="Reset1" type="reset" value="reset" />
+            <input id="Submit1" type="submit" value="submit" />
+        </p>
+
+    </form>
+
+</body>
+</html>
