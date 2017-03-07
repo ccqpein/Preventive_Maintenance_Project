@@ -17,4 +17,6 @@ urlpatterns = [
     url(r'^result/(?P<serial_num>.*)$', views.result, name="result"),
     url(r'^login/$', login_remember, name="login"),
     url(r'^register/$', views.register, name="register"),
+    url(r'^newequipment/$', views.newEquipment, name="newEq"),
+    url(r'^addequipment/$', views.addEquipment, name="addEq"),
 ]

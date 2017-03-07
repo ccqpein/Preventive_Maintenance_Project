@@ -40,3 +40,30 @@ def result(request, serial_num):
         'object_name': equipment.name,
         'left': equipment.quantity_left,
     })
+
+
+@login_required(login_url="/login/")
+def newEquipment(request):
+    return render(request, 'PM/NewEquipment.html')
+
+
+@login_required(login_url="/login/")
+# @permission_required('PM.view_Equipment', login_url='/login/')
+def addEquipment(request):
+    data = request.POST
+
+    print(data['warranty_expir_date'])
+    eq = Equipment(
+        eq_serial_num=data['serial_num'],
+        eq_name=data['name'],
+        eq_type=data['type'],
+        eq_expir_date=data['warranty_expir_date'],
+        eq_purchase_date=data['purchase_date'],
+        eq_manufacturer=data['manufacturer_date'],
+        eq_internal_part_num=data['internal_part_num'],
+        eq_contact_notes=data['note'],
+        eq_maintenance_schedule=data['schedule'],
+    )
+    eq.save()
+
+    return render(request, 'PM/message.html', {'message': "save successful"})
