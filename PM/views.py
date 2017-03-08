@@ -34,11 +34,11 @@ def register(request):
 @permission_required('PM.view_Equipment', login_url='/login/')
 def result(request, serial_num):
     serial_num = request.GET['serialNum']
-    equipment = get_object_or_404(Equipment, serial_num=serial_num)
+    equipment = get_object_or_404(Equipment, eq_serial_num=serial_num)
     return render(request, 'PM/result.html', {
         'serial_number': serial_num,
-        'object_name': equipment.name,
-        'left': equipment.quantity_left,
+        'object_name': equipment.eq_name,
+        'left': equipment.eq_quantity_left,
     })
 
 
