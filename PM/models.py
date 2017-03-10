@@ -27,6 +27,12 @@ class Equipment(models.Model):
 class EquipmentTool(models.Model):
     tool_name = models.CharField(max_length=100)
     tool_type = models.CharField(max_length=100)
+    tool_quantity_left = models.IntegerField(default=0)
+
+
+class MaintenanceSchedule(models.Model):
+    ms_serial_num = models.ForeignKey(Equipment)
+    ms_inter_part = models.IntegerField(default=0)
 
 
 class MyUser(AbstractUser):
