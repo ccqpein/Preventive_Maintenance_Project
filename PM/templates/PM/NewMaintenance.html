@@ -78,7 +78,9 @@
                             <input id="Text3" name= "" type="text" /></td>
                             <td>
                                 <select id="Select5" name="D1">
-                                    <option></option>
+                                    {% for et in lalala%}
+                                    <option>{{et}}</option>
+                                    {% endfor %}
                                 </select></td>
                             <td>
                                 <select id="Select6" name="D2">

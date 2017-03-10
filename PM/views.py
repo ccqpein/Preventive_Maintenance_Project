@@ -67,3 +67,9 @@ def addEquipment(request):
     eq.save()
 
     return render(request, 'PM/message.html', {'message': "save successful"})
+
+
+@login_required(login_url="/login/")
+def addMaintenance(request):
+    if not request.GET:
+        return render(request, 'PM/NewMaintenance.html', {'lalala': [2, 3, 4]})

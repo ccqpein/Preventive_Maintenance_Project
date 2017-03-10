@@ -19,4 +19,5 @@ urlpatterns = [
     url(r'^register/$', views.register, name="register"),
     url(r'^newequipment/$', views.newEquipment, name="newEq"),
     url(r'^addequipment/$', views.addEquipment, name="addEq"),
+    url(r'^addmaintenance/$', views.addMaintenance, name="addMT"),
 ]
