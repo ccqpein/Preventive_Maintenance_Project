@@ -33,6 +33,7 @@ class EquipmentTool(models.Model):
 class MaintenanceSchedule(models.Model):
     ms_serial_num = models.ForeignKey(Equipment)
     ms_inter_part = models.IntegerField(default=0)
+    ms_tools = models.ManyToManyField(EquipmentTool)
 
 
 class MyUser(AbstractUser):
