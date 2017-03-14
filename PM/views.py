@@ -44,7 +44,8 @@ def result(request, serial_num):
 
 @login_required(login_url="/login/")
 def newEquipment(request):
-    return render(request, 'PM/NewEquipment.html')
+    # return render(request, 'PM/NewEquipment.html')
+    return render(request, 'PM/forms.html')
 
 
 @login_required(login_url="/login/")
