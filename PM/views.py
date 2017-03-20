@@ -8,6 +8,7 @@ from .models import Equipment, MyUser
 from .forms import RegisterFrom
 
 
+@login_required(login_url="/login/")
 def index(request):
     return render(request, 'PM/index.html')
 
@@ -73,3 +74,16 @@ def addEquipment(request):
 def addMaintenance(request):
     if not request.GET:
         return render(request, 'PM/NewMaintenance.html', {'lalala': [2, 3, 4]})
+
+
+@login_required(login_url="/login/")
+def checkList(request):
+    if not request.GET:
+        return render(request, 'PM/CheckList.html')
+    else:
+        print("get")
+        return render(request, 'PM/CheckList.html')
+
+
+def formTest(request):
+    return render(request, 'PM/forms.html')
