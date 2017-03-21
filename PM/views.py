@@ -85,5 +85,13 @@ def checkList(request):
         return render(request, 'PM/CheckList.html')
 
 
+@login_required(login_url="/login/")
+def dailyReport(request):
+    if not request.GET:
+        return render(request, 'PM/dailyReport.html')
+    else:
+        return render(request, 'PM/dailyReport.html')
+
+
 def formTest(request):
     return render(request, 'PM/forms.html')

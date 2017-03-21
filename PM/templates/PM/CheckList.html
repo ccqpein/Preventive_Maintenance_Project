@@ -1,179 +1,302 @@
 {% include 'PM/formHead.html' %}
 <div id="page-wrapper">
-            <div class="row">
-                <div class="col-lg-12">
-                    <h1 class="page-header"> Check List</h1>
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header"> Check List</h1>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                
+                <div class="panel-heading">
+                    Check List Detail
                 </div>
-            </div>
-
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="panel panel-default">
-
-                        <div class="panel-heading">
-                            Check List Detail
-                        </div>
-                        <div class="panel-body">
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <form role="form" action = "{% url 'PM:checklist' %}" method="post">
-                                        {% csrf_token %}
-
-                                        <div class="form-group">
-                                            <label>Name Plate Rating:</label>
-                                            <input class="form-control" id="Text1" name= "name_plate-rating" type="text" />
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label>Date:</label>
-                                            <input class="form-control" type="date" name = "date"/>
-                                        </div>
-                                        
-                                        <div class="form-group">
-                                            <label>Operator:</label>
-                                            <input class="form-control" id="Text2" name= "operator" type="text" />
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label>Keep Hours:</label>
-
-                                            <p class="form-control-static">Start time</p>
-                                            <select class="form-control" name="StartT">
-                                                <option></option>
-                                            </select>
-
-                                            
-                                            <p class="form-control-static">Stop time</p>
-                                            <select class="form-control" name="StopT">
-                                                <option></option>
-                                            </select>
-
-                                            <p class="form-control-static">Cool Down</p>
-                                            <select class="form-control" name="CoolDown">
-                                                <option></option>
-                                            </select>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label>Oil Status:</label>
-
-                                            <p class="form-control-static">Oil Level</p>
-                                            <select class="form-control" name="OilLevel">
-                                                <option></option>
-                                            </select>
-
-                                            
-                                            <p class="form-control-static">How much added</p>
-                                            <select class="form-control" name="OilAdd">
-                                                <option></option>
-                                            </select>
-
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label>Radiator Status:</label>
-
-                                            <p class="form-control-static">Radiator Level</p>
-                                            <select class="form-control" name="RadiatorL">
-                                                <option></option>
-                                            </select>
-
-                                            
-                                            <p class="form-control-static">How much added</p>
-                                            <select class="form-control" name="RadiatorAdd">
-                                                <option></option>
-                                            </select>
-
-                                        </div>
-                                        
-                                        <div class="form-group">
-                                            <label>Battery Status:</label>
-
-                                            <p class="form-control-static">Battery Level</p>
-                                            <select class="form-control" name="BatteryL">
-                                                <option></option>
-                                            </select>
-
-                                            
-                                            <p class="form-control-static">Battery Charger</p>
-                                            <select class="form-control" name="BatteryCharger">
-                                                <option></option>
-                                            </select>
-
-                                        </div>                                        
-                                        
-                                        
-                                            
-                                        <div class="form-group">
-                                            <label>Consumables Required:</label>
-                                            <p class="form-control-static">Quantity</p>
-                                            <select class="form-control" name="Qty0">
-                                                <option></option>
-                                            </select>
-                                            
-                                            <p class="form-control-static">Type</p>
-                                            <select class="form-control" name="Qty1">
-                                                <option></option>
-                                            </select>
-                                            <input id="Button2" name= "" type="button" value="Add" />
-                                        </div>
-                                        
-                                        <label>
-                                            Maintenance Form
-                                        </label>
-                                        
-                                        
-                                        <table style="width:100%;">
-                                            <tr>
-                                                <td>Name</td>
-                                                <td>Required (Yes or No)</td>
-                                                <td>Field Type (Y/N, Numeric, Text)</td>
-                                            </tr>
-                                            
-                                            <tr>
-                                                <td>
-                                                    <input class="form-control" id="Text3" name= "" type="text" />
-                                                </td>
-                                                <td>
-                                                    <select class="form-control" id="Select5" name="D1">
-                                                        {% for et in lalala%}
-                                                        <option>{{et}}</option>
-                                                        {% endfor %}
-                                                    </select>
-                                                </td>
-                                                <td>
-                                                    <select class="form-control" id="Select6" name="D2">
-                                                        <option></option>
-                                                    </select>
-                                                </td>
-                                            </tr>
-                                            
-                                            <tr>
-                                                <td>
-                                                    <input class="form-control" id="Text4" name= "" type="text" />
-                                                </td>
-                                                <td>
-                                                    <select class="form-control" id="Select7" name="D3">
-                                                        <option></option>
-                                                    </select>
-                                                </td>
-                                                <td>
-                                                    <select class="form-control" id="Select8" name="D4">
-                                                        <option></option>
-                                                    </select>
-                                                    <input id="Button3" name= "" type="button" value="Add" />
-                                                </td>
-                                            </tr>
-                                        </table>
-                                        <button class="btn btn-default" type="reset" value="reset">Reset</button>
-                                        <button class="btn btn-default" type="submit" value="submit">Submit</button>
-                                    </form>   
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <form role="form" action = "{% url 'PM:checklist' %}" method="post">
+                                {% csrf_token %}
+                                
+                                <div class="form-group">
+                                    <label>Name Plate Rating:</label>
+                                    <input class="form-control" id="Text1" name= "name_plate-rating" type="text" />
                                 </div>
-                            </div>
+                                
+                                <div class="form-group">
+                                    <label>Date:</label>
+                                    <input class="form-control" type="date" name = "date"/>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Operator:</label>
+                                    <input class="form-control" id="Text2" name= "operator" type="text" />
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Keep Hours:</label>
+                                    
+                                    <p class="form-control-static">Start time</p>
+                                    <select class="form-control" name="StartT">
+                                        <option></option>
+                                    </select>
+                                    
+                                    
+                                    <p class="form-control-static">Stop time</p>
+                                    <select class="form-control" name="StopT">
+                                        <option></option>
+                                    </select>
+                                    
+                                    <p class="form-control-static">Cool Down</p>
+                                    <select class="form-control" name="CoolDown">
+                                        <option></option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Oil Status:</label>
+                                    
+                                    <p class="form-control-static">Oil Level</p>
+                                    <select class="form-control" name="OilLevel">
+                                        <option></option>
+                                    </select>
+                                    
+                                    
+                                    <p class="form-control-static">How much added</p>
+                                    <select class="form-control" name="OilAdd">
+                                        <option></option>
+                                    </select>
+                                    
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Radiator Status:</label>
+                                    
+                                    <p class="form-control-static">Radiator Level</p>
+                                    <select class="form-control" name="RadiatorL">
+                                        <option></option>
+                                    </select>
+                                    
+                                    
+                                    <p class="form-control-static">How much added</p>
+                                    <select class="form-control" name="RadiatorAdd">
+                                        <option></option>
+                                    </select>
+                                    
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Battery Status:</label>
+                                    
+                                    <p class="form-control-static">Battery Level</p>
+                                    <select class="form-control" name="BatteryL">
+                                        <option></option>
+                                    </select>
+                                    
+                                    
+                                    <p class="form-control-static">Battery Charger</p>
+                                    <select class="form-control" name="BatteryCharger">
+                                        <option></option>
+                                    </select>
+                                    
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Oil Pressure</label>
+                                    <input class="form-control" name= "OilPressure" type="text" />
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Fuel in tank:</label>
+                                    <input class="form-control" name= "FuelInTank" type="text" />
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Engine Temperature:</label>
+                                    <input class="form-control" name= "EngineTemp" type="text" />
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Block Heater:</label>
+                                    <input class="form-control" name= "BlockHeater" type="text" />
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Indicator Panel Light:</label>
+                                    <input class="form-control" name= "IndicatorPanelLight" type="text" />
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>AMP Draw Each Leg:</label>
+                                    
+                                    <p class="form-control-static">A (AMPS)</p>
+                                    <input class="form-control" name="AMP1" type="text">
+                                    
+                                    <p class="form-control-static">B (AMPS)</p>
+                                    <input class="form-control" name="AMP2" type="text">
+                                    
+                                    <p class="form-control-static">C (AMPS)</p>
+                                    <input class="form-control" name="AMP3" type="text">
+                                    
+                                </div>                                        
+                                
+                                <div class="form-group">
+                                    <label>Emergency Power Transfer Switch Working</label>
+                                    <div class="radio">
+                                        <label><input name="EPTSWY" type="radio"/>
+                                            Yes
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="radio">
+                                        <label><input name="EPTSWN" type="radio"/>
+                                            No
+                                        </label>
+                                    </div>
+                                    
+                                    <label>Emergency Power Indicating Light Working</label>
+                                    <div class="radio">
+                                        <label><input name="EPILWY" type="radio"/>
+                                            Yes
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="radio">
+                                        <label><input name="EPILWN" type="radio"/>
+                                            No
+                                        </label>
+                                    </div>
+                                    
+                                    <label>Fire Pump Transfer Switch Working</label>
+                                    <div class="radio">
+                                        <label><input name="FPTSWY" type="radio"/>
+                                            Yes
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="radio">
+                                        <label><input name="FPTSWN" type="radio"/>
+                                            No
+                                        </label>
+                                    </div>
+                                    
+                                    <label>Fire Pump Indicator Light Working</label>
+                                    <div class="radio">
+                                        <label><input name="FPILWY" type="radio"/>
+                                            Yes
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="radio">
+                                        <label><input name="FPILWN" type="radio"/>
+                                            No
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Confirm Isolation Room Negative Air Pressure Machine Powered By Generator</label>
+                                    <div class="radio">
+                                        <label><input name="CIRNAPMPBGY" type="radio"/>
+                                            Yes
+                                        </label>
+                                    </div>
+                                    <div class="radio">
+                                        <label><input name="CIRNAPMPBGN" type="radio"/>
+                                            No
+                                        </label>
+                                    </div>
+                                    
+                                    <label>Comments</label>
+                                    <textarea class="form-control" row="3" type="text" name="CIRNAPMPBGComment">
+                                    </textarea>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Generator Room Battery Backup Light Working</label>
+                                    <div class="radio">
+                                        <label><input name="GRBBLWY" type="radio"/>
+                                            Yes
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="radio">
+                                        <label><input name="GRBBLWN" type="radio"/>
+                                            No
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Fire Dampers On 2</label><br>
+                                    <label>1.
+                                        <input name="FDO21" type="text"/>
+                                    </label>
+                                    <label>2.
+                                        <input name="FDO22" type="text"/>
+                                    </label>
+                                    <label>3.
+                                        <input name="FDO23" type="text" />
+                                    </label>
+                                    <label>4.
+                                        <input name="FDO24" type="text" />
+                                    </label>
+                                    <label>5.
+                                        <input name="FDO25" type="text" />
+                                    </label><br>
+                                    
+                                    <label>Fire Dampers On 3</label><br>
+                                    <label>1.
+                                        <input name="FDO31" type="text"/>
+                                    </label>
+                                    <label>2.
+                                        <input name="FDO32" type="text"/>
+                                    </label><br>
+                                    <label>3.
+                                        <input name="FDO33" type="text" />
+                                    </label><br>
+                                    <label>4.
+                                        <input name="FDO34" type="text" />
+                                    </label><br>
+                                    <label>5.
+                                        <input name="FDO35" type="text" />
+                                    </label><br>
+                                    
+                                    <label>Fire Dampers On 4</label><br>
+                                    <label>1.
+                                        <input name="FDO41" type="text"/>
+                                    </label>
+                                    <label>2.
+                                        <input name="FDO42" type="text"/>
+                                    </label><br>
+                                    <label>3.
+                                        <input name="FDO43" type="text" />
+                                    </label><br>
+                                    <label>4.
+                                        <input name="FDO44" type="text" />
+                                    </label><br>
+                                            <label>5.
+                                                <input name="FDO45" type="text" />
+                                            </label><br>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Visual Inspection Of All Electrical Connections In Generator Room</label>
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox">Please Check
+                                    </label>
+                                </div>
+                                
+                                <button class="btn btn-default" type="reset" value="reset">Reset</button>
+                                <button class="btn btn-default" type="submit" value="submit">Submit</button>
+                            </form>   
                         </div>
-                        
                     </div>
                 </div>
+                
             </div>
         </div>
+    </div>
+</div>
 {% include 'PM/formTail.html' %}
