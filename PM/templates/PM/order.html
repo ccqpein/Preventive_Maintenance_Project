@@ -1,0 +1,81 @@
+{% include 'PM/formHead.html' %}
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header"> Work Order Request</h1>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                
+                <div class="panel-heading">
+                    Work Order Request Detail
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <form role="form" action = "{% url 'PM:order' %}" method="post">
+                                {% csrf_token %}
+
+                                <div class="form-group">
+                                    <label>Date Requested:</label>
+                                    <input class="form-control" type="date" name="dateReq"/>
+
+                                    <label>Requested By:</label>
+                                    <input class="form-control" type="text" name="reqBy"/>
+
+                                    <label>Building:</label>
+                                    <input class="form-control" type="text" name="building"/>
+
+                                    <label>Floor:</label>
+                                    <input class="form-control" type="text" name="floor"/>
+
+                                    <label>Room:</label>
+                                    <input class="form-control" type="text" name="room"/>
+
+                                    <label>Supervisor:</label>
+                                    <input class="form-control" type="text" name="supervisor"/>
+
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Work Requested</label>
+                                    <textarea class="form-control" row="4" name="workrequested">
+                                    </textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Work Order</label>
+                                    <input class="form-control" type="text" name="workOrder"/>
+
+                                    <label>Date Issued</label>
+                                    <input class="form-control" type="text" name="dateIssued"/>
+
+                                    <label>Employee</label>
+                                    <input class="form-control" type="text" name="employee"/>
+
+                                    <label>Date Completed</label>
+                                    <input class="form-control" type="text" name="dateCompleted"/>
+
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Materials Used/Comments</label>
+                                    <textarea class="form-control" row="4" type="text" name="materialsused">
+                                    </textarea>
+                                </div>
+                                
+                                <button class="btn btn-default" type="reset" value="reset">Reset</button>
+                                <button class="btn btn-default" type="submit" value="submit">Submit</button>
+                            </form>   
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>                            
+{% include 'PM/formTail.html' %}

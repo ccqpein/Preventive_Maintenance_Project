@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^addmaintenance/$', views.addMaintenance, name="addMT"),
     url(r'^checklist/$', views.checkList, name="checklist"),
     url(r'^report/$', views.dailyReport, name="dailyreport"),
+    url(r'^order/$', views.orderRequest, name="order"),
 
     url(r'^form/$', views.formTest, name="test"),
 ]

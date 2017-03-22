@@ -93,5 +93,13 @@ def dailyReport(request):
         return render(request, 'PM/dailyReport.html')
 
 
+@login_required(login_url="/login/")
+def orderRequest(request):
+    if not request.GET:
+        return render(request, 'PM/order.html')
+    else:
+        return render(request, 'PM/order.html')
+
+
 def formTest(request):
     return render(request, 'PM/forms.html')
