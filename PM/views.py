@@ -71,12 +71,14 @@ def addEquipment(request):
 
 
 @login_required(login_url="/login/")
+@permission_required('PM.view_Equipment', login_url='/login/')
 def addMaintenance(request):
     if not request.GET:
         return render(request, 'PM/NewMaintenance.html', {'lalala': [2, 3, 4]})
 
 
 @login_required(login_url="/login/")
+@permission_required('PM.add_checklist', login_url='/login/')
 def checkList(request):
     if not request.GET:
         return render(request, 'PM/CheckList.html')
@@ -86,6 +88,7 @@ def checkList(request):
 
 
 @login_required(login_url="/login/")
+@permission_required('PM.add_dailyreport', login_url='/login/')
 def dailyReport(request):
     if not request.GET:
         return render(request, 'PM/dailyReport.html')
@@ -94,11 +97,21 @@ def dailyReport(request):
 
 
 @login_required(login_url="/login/")
+@permission_required('PM.add_order', login_url='/login/')
 def orderRequest(request):
     if not request.GET:
         return render(request, 'PM/order.html')
     else:
         return render(request, 'PM/order.html')
+
+
+@login_required(login_url="/login/")
+@permission_required('PM.add_safetycheck', login_url='/login/')
+def safetycheck(request):
+    if not request.GET:
+        return render(request, 'PM/SafetyCheck.html')
+    else:
+        return render(request, 'PM/SafetyCheck.html')
 
 
 def formTest(request):

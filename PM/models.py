@@ -37,6 +37,12 @@ class MaintenanceSchedule(models.Model):
 
 
 class DailyReport(models.Model):
+
+    class Meta:
+        permissions = (
+            ("view_DailyReport", "Can view daily report"),
+        )
+
     dp_name = models.CharField(max_length=50)
     dp_shift = models.CharField(max_length=50)
     dp_date = models.DateField()
@@ -45,6 +51,12 @@ class DailyReport(models.Model):
 
 
 class Order(models.Model):
+
+    class Meta:
+        permissions = (
+            ("view_order", "Can view orders"),
+        )
+
     ord_date = models.DateField()
     ord_req_by = models.CharField(max_length=50)
     ord_building = models.CharField(max_length=100)
@@ -60,6 +72,12 @@ class Order(models.Model):
 
 
 class CheckList(models.Model):
+
+    class Meta:
+        permissions = (
+            ("view_CheckList", "Can view CheckList"),
+        )
+
     cl_plate_rating = models.CharField(max_length=100)
     cl_date = models.DateField()
     cl_operator = models.CharField(max_length=100)
@@ -96,6 +114,24 @@ class CheckList(models.Model):
     cl_fire_dampers4 = models.CharField(max_length=150)
 
     cl_checkbox = models.CharField(max_length=100)
+
+
+class SafetyCheck(models.Model):
+
+    class Meta:
+        permissions = (
+            ("view_SafetyCheck", "Can view safety check"),
+        )
+
+    sc_location = models.CharField(max_length=50)
+    sc_desc = models.CharField(max_length=100)
+    sc_brand_name = models.CharField(max_length=50)
+    sc_inspection_date = models.DateField()
+    sc_inspection_by = models.CharField(max_length=50)
+    sc_next_inspection_date = models.DateField()
+    sc_condition = models.CharField(max_length=50)
+    sc_comment = models.CharField(max_length=200)
+    sc_date = models.DateField()
 
 
 class MyUser(AbstractUser):
