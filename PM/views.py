@@ -4,8 +4,9 @@ from django.http import HttpResponseRedirect
 
 # Create your views here.
 # from django.contrib.auth.models import User
-from .models import Equipment, CheckList, DailyReport, Order, MyUser
+from .models import Equipment, CheckList, DailyReport, Order, SafetyCheck, MyUser
 from .forms import RegisterFrom
+from datetime import datetime
 
 
 @login_required(login_url="/login/")
@@ -131,7 +132,7 @@ def checkList(request):
             cl_checkbox=data['checkbox'],
 
         )
-        print(data)
+        cl.save()
         return render(request, 'PM/message.html',
                       {'message': "save successful"})
     else:
@@ -187,8 +188,22 @@ def orderRequest(request):
 @login_required(login_url="/login/")
 @permission_required('PM.add_safetycheck', login_url='/login/')
 def safetycheck(request):
-    if not request.GET:
-        return render(request, 'PM/SafetyCheck.html')
+    if request.method != 'GET':
+        data = request.POST
+        sc = SafetyCheck(
+            sc_location=data['location'],
+            sc_desc=data['descrip'],
+            sc_brand_name=data['brandname'],
+            sc_inspection_date=data['inspectiondate'],
+            sc_inspection_by=data['inspectionby'],
+            sc_next_inspection_date=data['nextinspectiondate'],
+            sc_condition=data['condition'],
+            sc_comment=data['comments'],
+            sc_date=datetime.now().date(),
+        )
+        sc.save()
+        return render(request, 'PM/message.html',
+                      {'message': "save successful"})
     else:
         return render(request, 'PM/SafetyCheck.html')
 

@@ -4,7 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
 # Register your models here.
-from .models import Equipment, EquipmentTool, MyUser
+from .models import Equipment, CheckList, DailyReport, Order, SafetyCheck, MyUser
 
 
 class User_exAdmin(admin.ModelAdmin):
@@ -50,5 +50,8 @@ class CustomUserAdmin(UserAdmin):
         return super(CustomUserAdmin, self).changelist_view(request, extra_context)
 
 admin.site.register(Equipment)
-admin.site.register(EquipmentTool)
+admin.site.register(DailyReport)
+admin.site.register(Order)
+admin.site.register(CheckList)
+admin.site.register(SafetyCheck)
 admin.site.register(MyUser, CustomUserAdmin)

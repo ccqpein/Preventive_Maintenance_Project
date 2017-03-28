@@ -30,26 +30,20 @@
                                     <input class="form-control" type="text" name="brandname"/>
 
                                     <label>Inspection Date:</label>
-                                    <input class="form-control" type="text" name="inspectiondate"/>
+                                    <input class="form-control" type="date" name="inspectiondate"/>
 
                                     <label>Inspection By:</label>
                                     <input class="form-control" type="text" name="inspectionby"/>
 
                                     <label>Next Inspection Date:</label>
-                                    <input class="form-control" type="text" name="nextinspectiondate"/>
+                                    <input class="form-control" type="date" name="nextinspectiondate"/>
 
                                     <label>Condition Of Item</label>
-                                    <div class="radio">
-                                        <label><input name="conditionY" type="radio"/>
-                                            Pass
-                                        </label>
-                                    </div>
-                                    <div class="radio">
-                                        <label><input name="conditionN" type="radio"/>
-                                            Fail
-                                        </label>
-                                    </div>                                    
-
+                                    <select class="form-control" name="condition">
+                                        <option>Yes</option>
+                                        <option>No</option>
+                                    </select>
+                                    
                                     <label>Comments</label>
                                     <textarea class="form-control" row="4" type="text" name="comments">
                                     </textarea>                                    
