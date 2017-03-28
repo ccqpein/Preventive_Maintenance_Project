@@ -36,7 +36,8 @@
                                     </select>
                                     <p class="form-control-static">Stop time</p>
                                     <select class="form-control" name="StopT">
-                                        <option></option>
+                                        <option>1</option>
+                                        <option>2</option>
                                     </select>
                                     <p class="form-control-static">Cool Down</p>
                                     <select class="form-control" name="CoolDown">
@@ -107,78 +108,48 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Emergency Power Transfer Switch Working</label>
-                                    <div class="radio">
-                                        <label><input name="EPTSWY" type="radio"/>
-                                            Yes
-                                        </label>
-                                    </div>
-                                    <div class="radio">
-                                        <label><input name="EPTSWN" type="radio"/>
-                                            No
-                                        </label>
-                                    </div>
+                                    <select class="form-control" name="EPTSW">
+                                        <option>Yes</option>
+                                        <option>No</option>
+                                    </select>
+
                                     <label>Emergency Power Indicating Light Working</label>
-                                    <div class="radio">
-                                        <label><input name="EPILWY" type="radio"/>
-                                            Yes
-                                        </label>
-                                    </div>
-                                    <div class="radio">
-                                        <label><input name="EPILWN" type="radio"/>
-                                            No
-                                        </label>
-                                    </div>
+                                    <select class="form-control" name="EPILW">
+                                        <option>Yes</option>
+                                        <option>No</option>
+                                    </select>
+                                    
+
                                     <label>Fire Pump Transfer Switch Working</label>
-                                    <div class="radio">
-                                        <label><input name="FPTSWY" type="radio"/>
-                                            Yes
-                                        </label>
-                                    </div>
-                                    <div class="radio">
-                                        <label><input name="FPTSWN" type="radio"/>
-                                            No
-                                        </label>
-                                    </div>
+                                    <select class="form-control" name="FPTSW">
+                                        <option>Yes</option>
+                                        <option>No</option>
+                                    </select>
+
                                     <label>Fire Pump Indicator Light Working</label>
-                                    <div class="radio">
-                                        <label><input name="FPILWY" type="radio"/>
-                                            Yes
-                                        </label>
-                                    </div>
-                                    <div class="radio">
-                                        <label><input name="FPILWN" type="radio"/>
-                                            No
-                                        </label>
-                                    </div>
+                                    <select class="form-control" name="FPILW">
+                                        <option>Yes</option>
+                                        <option>No</option>
+                                    </select>
                                 </div>
                                 <div class="form-group">
                                     <label>Confirm Isolation Room Negative Air Pressure Machine Powered By Generator</label>
-                                    <div class="radio">
-                                        <label><input name="CIRNAPMPBGY" type="radio"/>
-                                            Yes
-                                        </label>
-                                    </div>
-                                    <div class="radio">
-                                        <label><input name="CIRNAPMPBGN" type="radio"/>
-                                            No
-                                        </label>
-                                    </div>
+                                    <select class="form-control" name="CIRNAPMPBG">
+                                        <option>Yes</option>
+                                        <option>No</option>
+                                    </select>
+
                                     <label>Comments</label>
                                     <textarea class="form-control" row="3" type="text" name="CIRNAPMPBGComment">
                                     </textarea>
                                 </div>
                                 <div class="form-group">
                                     <label>Generator Room Battery Backup Light Working</label>
-                                    <div class="radio">
-                                        <label><input name="GRBBLWY" type="radio"/>
-                                            Yes
-                                        </label>
-                                    </div>
-                                    <div class="radio">
-                                        <label><input name="GRBBLWN" type="radio"/>
-                                            No
-                                        </label>
-                                    </div>
+                                    <select class="form-control" name="GRBBLW">
+                                        <option>Yes</option>
+                                        <option>No</option>
+                                    </select>
+
                                 </div>
                                 <div class="form-group">
                                     <label>Fire Dampers On 2</label><br>
@@ -233,7 +204,7 @@
                                 <div class="form-group">
                                     <label>Visual Inspection Of All Electrical Connections In Generator Room</label>
                                     <label class="checkbox-inline">
-                                        <input type="checkbox">Please Check
+                                        <input type="checkbox" name="checkbox">Please Check
                                     </label>
                                 </div>
                                 <button class="btn btn-default" type="reset" value="reset">Reset</button>

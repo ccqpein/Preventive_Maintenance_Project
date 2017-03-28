@@ -105,15 +105,19 @@ class CheckList(models.Model):
     cl_amp_2 = models.CharField(max_length=100)
     cl_amp_3 = models.CharField(max_length=100)
 
-    cl_eptsw = models.CharField(max_length=100)
-    cl_cirnapmpbg = models.CharField(max_length=100)
-    cl_grbblw = models.CharField(max_length=100)
+    cl_eptsw = models.CharField(max_length=20)
+    cl_epilw = models.CharField(max_length=20)
+    cl_fptsw = models.CharField(max_length=20)
+    cl_fpilw = models.CharField(max_length=20)
+    cl_cirnapmpbg = models.CharField(max_length=20)
+    cl_cirnapmpbgcomment = models.CharField(max_length=200)
+    cl_grbblw = models.CharField(max_length=20)
 
     cl_fire_dampers2 = models.CharField(max_length=150)
     cl_fire_dampers3 = models.CharField(max_length=150)
     cl_fire_dampers4 = models.CharField(max_length=150)
 
-    cl_checkbox = models.CharField(max_length=100)
+    cl_checkbox = models.CharField(max_length=20)
 
 
 class SafetyCheck(models.Model):

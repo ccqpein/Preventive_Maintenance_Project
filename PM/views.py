@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 
 # Create your views here.
 # from django.contrib.auth.models import User
-from .models import Equipment, MyUser
+from .models import Equipment, CheckList, DailyReport, Order, MyUser
 from .forms import RegisterFrom
 
 
@@ -80,18 +80,79 @@ def addMaintenance(request):
 @login_required(login_url="/login/")
 @permission_required('PM.add_checklist', login_url='/login/')
 def checkList(request):
-    if not request.GET:
-        return render(request, 'PM/CheckList.html')
+    if request.method != 'GET':
+        data = request.POST
+        cl = CheckList(
+            cl_plate_rating=data['name_plate_rating'],
+            cl_date=data['date'],
+            cl_operator=data['operator'],
+
+            cl_start_time=data['StartT'],
+            cl_stop_time=data['StopT'],
+            cl_cool_time=data['CoolDown'],
+
+            cl_oil_level=data['OilLevel'],
+            cl_oil_add=data['OilAdd'],
+
+            cl_radiator_level=data['RadiatorL'],
+            cl_radiator_add=data['RadiatorAdd'],
+
+            cl_battery_level=data['BatteryL'],
+            cl_battery_charger=data['BatteryCharger'],
+
+            cl_oil_pressure=data['OilPressure'],
+            cl_fuel_tank=data['FuelInTank'],
+            cl_engine_temp=data['EngineTemp'],
+            cl_block_heater=data['BlockHeater'],
+            cl_indicator_panel_light=data['IndicatorPanelLight'],
+
+            cl_amp_1=data['AMP1'],
+            cl_amp_2=data['AMP2'],
+            cl_amp_3=data['AMP3'],
+
+            cl_eptsw=data['EPTSW'],
+            cl_epilw=data['EPILW'],
+            cl_fptsw=data['FPTSW'],
+            cl_fpilw=data['FPILW'],
+            cl_cirnapmpbg=data['CIRNAPMPBG'],
+            cl_cirnapmpbgcomment=data['CIRNAPMPBGComment'],
+            cl_grbblw=data['GRBBLW'],
+
+            cl_fire_dampers2=data['FDO21'] + '/'
+            + data['FDO22'] + '/' + data['FDO23'] + '/'
+            + data['FDO24'] + '/' + data['FDO25'],
+            cl_fire_dampers3=data['FDO31'] + '/'
+            + data['FDO32'] + '/' + data['FDO33'] + '/'
+            + data['FDO34'] + '/' + data['FDO35'],
+            cl_fire_dampers4=data['FDO41'] + '/'
+            + data['FDO42'] + '/' + data['FDO43'] + '/'
+            + data['FDO44'] + '/' + data['FDO45'],
+
+            cl_checkbox=data['checkbox'],
+
+        )
+        print(data)
+        return render(request, 'PM/message.html',
+                      {'message': "save successful"})
     else:
-        print("get")
         return render(request, 'PM/CheckList.html')
 
 
 @login_required(login_url="/login/")
 @permission_required('PM.add_dailyreport', login_url='/login/')
 def dailyReport(request):
-    if not request.GET:
-        return render(request, 'PM/dailyReport.html')
+    if request.method != 'GET':
+        data = request.POST
+        dr = DailyReport(
+            dp_name=data['name'],
+            dp_shift=data['shift'],
+            dp_date=data['date'],
+            dp_work_performed=data['workperformed'],
+            dp_problems_ident=data['problems'],
+        )
+        dr.save()
+        return render(request, 'PM/message.html',
+                      {'message': "save successful"})
     else:
         return render(request, 'PM/dailyReport.html')
 
@@ -99,8 +160,26 @@ def dailyReport(request):
 @login_required(login_url="/login/")
 @permission_required('PM.add_order', login_url='/login/')
 def orderRequest(request):
-    if not request.GET:
-        return render(request, 'PM/order.html')
+    if request.method != 'GET':
+        data = request.POST
+        od = Order(
+            ord_date=data['dateReq'],
+            ord_req_by=data['reqBy'],
+            ord_building=data['building'],
+            ord_floor=data['floor'],
+            ord_room=data['room'],
+            ord_supervisor=data['supervisor'],
+            ord_work_req=data['workrequested'],
+            ord_work_ord=data['workOrder'],
+            ord_date_issue=data['dateIssued'],
+            ord_employee=data['employee'],
+            ord_date_comp=data['dateCompleted'],
+            ord_comments=data['materialsused'],
+        )
+
+        od.save()
+        return render(request, 'PM/message.html',
+                      {'message': "save successful"})
     else:
         return render(request, 'PM/order.html')
 
