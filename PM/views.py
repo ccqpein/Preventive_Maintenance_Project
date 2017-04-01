@@ -11,7 +11,10 @@ from datetime import datetime
 
 @login_required(login_url="/login/")
 def index(request):
-    return render(request, 'PM/index.html')
+    orderLeft = Order.objects.filter(ord_complete=False).count()
+    return render(request, 'PM/index.html',
+                  {'order_left': orderLeft}
+                  )
 
 
 def register(request):
@@ -209,4 +212,6 @@ def safetycheck(request):
 
 
 def formTest(request):
-    return render(request, 'PM/forms.html')
+    return render(request, 'PM/viewForm.html',
+                  {'titles': [1, 2, 3, 4, 5],
+                   'content': [(11, 22, 33, 44, 55)]})

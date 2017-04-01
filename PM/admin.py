@@ -27,7 +27,7 @@ class CustomUserAdmin(UserAdmin):
                               (_('Personal info'), {
                                   'fields': ('email', 'phone')}),
                               (_('Permissions'), {
-                               '# FIXME: elds': ('is_active', 'is_staff', 'groups')}),
+                                  'fields': ('is_active', 'is_staff', 'groups')}),
                               (_('Important dates'), {
                                   'fields': ('last_login', 'date_joined')}),
                               )
@@ -42,12 +42,13 @@ class CustomUserAdmin(UserAdmin):
                               (_('Permissions'), {
                                'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
                               (_('Important dates'), {
-                               'fields': ('last_login', 'date_joined')}),
+                                  'fields': ('last_login', 'date_joined')}),
                               )
             self.add_fieldsets = ((None, {'classes': ('wide',),
                                           'fields': ('username', 'phone', 'password1', 'password2', 'email', 'is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions'), }),
                                   )
         return super(CustomUserAdmin, self).changelist_view(request, extra_context)
+
 
 admin.site.register(Equipment)
 admin.site.register(DailyReport)

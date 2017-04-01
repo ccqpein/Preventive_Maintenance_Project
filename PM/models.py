@@ -49,6 +49,9 @@ class DailyReport(models.Model):
     dp_work_performed = models.CharField(max_length=1000)
     dp_problems_ident = models.CharField(max_length=1000)
 
+    def __str__(self):
+        return self.dp_name
+
 
 class Order(models.Model):
 
@@ -69,6 +72,11 @@ class Order(models.Model):
     ord_employee = models.CharField(max_length=100)
     ord_date_comp = models.DateField()
     ord_comments = models.CharField(max_length=1000)
+
+    ord_complete = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.ord_date.__str__()
 
 
 class CheckList(models.Model):
