@@ -129,24 +129,34 @@ def viewMain(request, form_ID):
     if request.method != 'GET':
         data = request.POST
         print(data)
-        mc = MaintenanceContent(
-            mc_temp=MaintenanceSchedule.objects.get(id=form_ID),
-            mc_content=" -*- ".join(request.POST.getlist('values'))
-        )
+        mc = get_object_or_404(MaintenanceContent, id=form_ID)
+        mc.mc_content = " -*- ".join(request.POST.getlist('values'))
         mc.save()
         return render(request, 'PM/message.html',
                       {'message': "submit successful"})
     else:
+        tempID = get_object_or_404(MaintenanceContent, id=form_ID).mc_temp_id
         lines = model_to_dict(get_object_or_404(
-            MaintenanceSchedule, id=form_ID))
+            MaintenanceSchedule, id=tempID))
+        print(lines)
+
+        temp = [('ms_name', lines['ms_name']),
+                ('serial number', lines['ms_serial_num']),
+                ('internal part number', lines['ms_inter_part']),
+                ('tools name', lines['ms_tools_name']),
+                ('tools quantity', lines['ms_tools_name']),
+                ]
+
         labels = lines['ms_form_names'].split(' -*- ')
         reqs = lines['ms_form_reqs'].split(' -*- ')
         types = lines['ms_form_fields'].split(' -*- ')
         MT = [(labels[i], reqs[i], types[i]) for i in range(len(labels))]
+
         return render(request, 'PM/Maintenance.html',
                       {'MT': MT,
                        'form_ID': form_ID,
-                       'mainName': lines['ms_name']})
+                       'mainName': lines['ms_name'],
+                       'temp': temp})
 
 
 @login_required(login_url="/login/")
@@ -246,7 +256,6 @@ def orderRequest(request):
             ord_work_ord=data['workOrder'],
             ord_date_issue=data['dateIssued'],
             ord_employee=data['employee'],
-            ord_date_comp=data['dateCompleted'],
             ord_comments=data['materialsused'],
         )
 
@@ -287,6 +296,39 @@ def viewTasks(request):
         return render(request, 'PM/viewForm.html',
                       {'titles': ["Type", "Add Date", 'Due Date', 'View'],
                        'content': resultList})
+
+
+def viewOrders(request, orderNumber):
+    if request.method == 'GET':
+        od = Order.objects.get(id=orderNumber)
+        checkMark = ""
+        if od.ord_complete:
+            checkMark = "checked"
+        return render(request, 'PM/viewOrders.html',
+                      {'dateReq': od.ord_date,
+                       'reqBy': od.ord_req_by,
+                       'building': od.ord_building,
+                       'floor': od.ord_floor,
+                       'room': od.ord_room,
+                       'supervisor': od.ord_supervisor,
+                       'workrequested': od.ord_work_req,
+                       'workOrder': od.ord_work_ord,
+                       'dateIssued': od.ord_date_issue,
+                       'employee': od.ord_employee,
+                       'materialsused': od.ord_comments,
+                       'orderNumber': orderNumber,
+                       'complete': checkMark,
+                       })
+    else:
+        od = Order.objects.get(id=orderNumber)
+        print(request.POST)
+        if request.POST.get('complete'):
+            od.ord_complete = True
+        else:
+            od.ord_complete = False
+        od.save()
+        return render(request, 'PM/message.html',
+                      {'message': "save successful"})
 
 
 def formTest(request):

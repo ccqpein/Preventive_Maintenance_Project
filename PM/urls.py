@@ -22,12 +22,12 @@ urlpatterns = [
     url(r'^newequipment/$', views.newEquipment, name="newEq"),
     url(r'^addequipment/$', views.addEquipment, name="addEq"),
     url(r'^addmaintenance/$', views.addMaintenance, name="addMT"),
-    url(r'^checklist/$', views.checkList, name="checklist"),
     url(r'^report/$', views.dailyReport, name="dailyreport"),
     url(r'^order/$', views.orderRequest, name="order"),
-    url(r'^safetycheck/$', views.safetycheck, name="safety"),
     url(r'^viewMain/(?P<form_ID>[0-9]+)/$', views.viewMain, name="viewMT"),
     url(r'^viewTasks/$', views.viewTasks, name="viewTasks"),
+    url(r'^viewOrders/(?P<orderNumber>[0-9]+)/$',
+        views.viewOrders, name="viewOrders"),
 
     url(r'^form/$', views.formTest, name="test"),
 ]

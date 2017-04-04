@@ -39,8 +39,6 @@ class MaintenanceSchedule(models.Model):
     ms_inter_part = models.CharField(max_length=100)
     ms_tools_name = models.CharField(max_length=500)
     ms_tools_qty = models.CharField(max_length=100)
-    ms_cons_name = models.CharField(max_length=500)
-    ms_cons_qty = models.CharField(max_length=100)
 
     ms_form_names = models.CharField(max_length=1000)
     ms_form_reqs = models.CharField(max_length=100)
