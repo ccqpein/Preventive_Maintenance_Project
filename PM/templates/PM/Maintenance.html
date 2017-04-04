@@ -1,0 +1,39 @@
+{% include 'PM/formHead.html' %}
+<div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header"> {{mainName}}</h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            {{mainName}} Detail
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <form role="form" action = "{% url 'PM:viewMT' form_ID %}" method="post">
+                                        {% csrf_token %}
+                                        <div class="form-group">
+                                            {% for i in MT %}
+                                            <label>{{ i.0}}:</label>
+                                            <input class="form-control" name="values" type="{{i.2}}"/>
+                                            {% endfor %}
+                                        </div>
+                                        <button class="btn btn-default" type="reset" value="reset">Reset</button>
+                                        <button class="btn btn-default" type="submit" value="submit">Submit</button>
+                                    </form>   
+                                </div>
+                            </div>
+                            <!-- /.row (nested) -->
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                </div>
+            </div>
+        </div>
+{% include 'PM/formTail.html' %}

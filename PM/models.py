@@ -23,6 +23,8 @@ class Equipment(models.Model):
     eq_maintenance_schedule = models.IntegerField(default=0)  # number of week
     eq_contact_notes = models.CharField(max_length=100)
 
+    eq_add_date = models.DateField(auto_now=True)
+
 
 class EquipmentTool(models.Model):
     tool_name = models.CharField(max_length=100)
@@ -31,9 +33,25 @@ class EquipmentTool(models.Model):
 
 
 class MaintenanceSchedule(models.Model):
-    ms_serial_num = models.ForeignKey(Equipment)
-    ms_inter_part = models.IntegerField(default=0)
-    ms_tools = models.ManyToManyField(EquipmentTool)
+    ms_name = models.CharField(max_length=100)
+    ms_serial_num = models.CharField(max_length=100)
+    ms_inter_part = models.CharField(max_length=100)
+    ms_tools_name = models.CharField(max_length=500)
+    ms_tools_qty = models.CharField(max_length=100)
+    ms_cons_name = models.CharField(max_length=500)
+    ms_cons_qty = models.CharField(max_length=100)
+
+    ms_form_names = models.CharField(max_length=1000)
+    ms_form_reqs = models.CharField(max_length=100)
+    ms_form_fields = models.CharField(max_length=200)
+
+    ms_date = models.DateField(auto_now=True)
+
+
+class MaintenanceContent(models.Model):
+    mc_temp = models.ForeignKey(MaintenanceSchedule)
+    mc_content = models.CharField(max_length=2000)
+    mc_date = models.DateField(auto_now=True)
 
 
 class DailyReport(models.Model):

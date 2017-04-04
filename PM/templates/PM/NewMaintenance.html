@@ -2,7 +2,7 @@
 <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header"> Add One Week Scheduled Maintenance</h1>
+                    <h1 class="page-header"> Add Weekly Scheduled Maintenance</h1>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
@@ -20,93 +20,205 @@
                                         {% csrf_token %}
 
                                         <div class="form-group">
+                                            <label>Name</label>
+                                            <input class="form-control"  name= "name" type="text" />
+                                            
                                             <label>Serial Number:</label>
-                                            <input class="form-control" id="Text1" name= "serial_num" type="text" />
-                                        </div>
-                                        
-                                        <div class="form-group">
+                                            <input class="form-control"  name= "serial_num" type="text" />
+
                                             <label>Internal Part Number:</label>
-                                            <input class="form-control" id="Text2" name= "internal_part_num" type="text" />
+                                            <input class="form-control"  name= "internal_part_num" type="text" />
                                         </div>
                                         
                                         <div class="form-group">
-                                            <label>Tools Required:</label>
+                                            <label>Tools Required 1:</label>                                            
+                                            <p class="form-control-static">Name</p>
+                                            <select class="form-control" name="ToolName">
+                                                <option></option>
+                                            </select>
+
+
                                             <p class="form-control-static">Quantity</p>
                                             <select class="form-control" name="ToolQty">
                                                 <option></option>
                                             </select>
 
-                                            
-                                            <p class="form-control-static">Type</p>
-                                            
-                                            <select class="form-control" name="ToolType">
+                                            <label>Tools Required 2:</label>                                            
+                                            <p class="form-control-static">Name</p>
+                                            <select class="form-control" name="ToolName">
                                                 <option></option>
                                             </select>
-                                            
-                                            <input id="Button1" name= "" type="button" value="Add" />
-                                        </div>
+
+
+                                            <p class="form-control-static">Quantity</p>
+                                            <select class="form-control" name="ToolQty">
+                                                <option></option>
+                                            </select>
+
+                                            <label>Tools Required 3:</label>                                            
+                                            <p class="form-control-static">Name</p>
+                                            <select class="form-control" name="ToolName">
+                                                <option></option>
+                                            </select>
+
+
+                                            <p class="form-control-static">Quantity</p>
+                                            <select class="form-control" name="ToolQty">
+                                                <option></option>
+                                            </select>
+                                        </div>                                        
                                             
                                         <div class="form-group">
-                                            <label>Consumables Required:</label>
+                                            <label>Consumables Required 1:</label>
+                                            <p class="form-control-static">Name</p>
+                                            <select class="form-control" name="ConsumName">
+                                                <option></option>
+                                            </select>
+
+
                                             <p class="form-control-static">Quantity</p>
-                                            <select class="form-control" name="Qty0">
+                                            <select class="form-control" name="ConsumQty">
                                                 <option></option>
                                             </select>
                                             
-                                            <p class="form-control-static">Type</p>
-                                            <select class="form-control" name="Qty1">
+
+                                            <label>Consumables Required 2:</label>
+                                            <p class="form-control-static">Name</p>
+                                            <select class="form-control" name="ConsumName">
                                                 <option></option>
                                             </select>
-                                            <input id="Button2" name= "" type="button" value="Add" />
-                                        </div>
+
+
+                                            <p class="form-control-static">Quantity</p>
+                                            <select class="form-control" name="ConsumQty">
+                                                <option></option>
+                                            </select>
+                                            
+
+                                            <label>Consumables Required 3:</label>
+                                            <p class="form-control-static">Name</p>
+                                            <select class="form-control" name="ConsumName">
+                                                <option></option>
+                                            </select>
+
+
+                                            <p class="form-control-static">Quantity</p>
+                                            <select class="form-control" name="ConsumQty">
+                                                <option></option>
+                                            </select>
+                                            
+                                        </div>                                        
                                         
                                         <label>
                                             Maintenance Form
-                                        </label>
-                                        
-                                        
-                                        <table style="width:100%;">
-                                            <tr>
-                                                <td>Name</td>
-                                                <td>Required (Yes or No)</td>
-                                                <td>Field Type (Y/N, Numeric, Text)</td>
-                                            </tr>
-                                            
-                                            <tr>
-                                                <td>
-                                                    <input class="form-control" id="Text3" name= "" type="text" />
-                                                </td>
-                                                <td>
-                                                    <select class="form-control" id="Select5" name="D1">
-                                                        {% for et in lalala%}
-                                                        <option>{{et}}</option>
-                                                        {% endfor %}
-                                                    </select>
-                                                </td>
-                                                <td>
-                                                    <select class="form-control" id="Select6" name="D2">
-                                                        <option></option>
-                                                    </select>
-                                                </td>
-                                            </tr>
-                                            
-                                            <tr>
-                                                <td>
-                                                    <input class="form-control" id="Text4" name= "" type="text" />
-                                                </td>
-                                                <td>
-                                                    <select class="form-control" id="Select7" name="D3">
-                                                        <option></option>
-                                                    </select>
-                                                </td>
-                                                <td>
-                                                    <select class="form-control" id="Select8" name="D4">
-                                                        <option></option>
-                                                    </select>
-                                                    <input id="Button3" name= "" type="button" value="Add" />
-                                                </td>
-                                            </tr>
-                                        </table>
+                                        </label><br>
+
+                                        <div class='form-group'>
+                                            <label>Name <input name = 'mfname' type='text'/></label>
+                                            <label>Required  <select class='form-control' name = 'mfreq'>
+                                                <option>No</option>
+                                                <option>Yes</option></select>
+                                            </label>
+                                            <label>Field Type  <select class='form-control' name = 'mffieldtype'>
+                                                <option>Text</option>
+                                                <option>Number</option>
+                                                <option>Date</option>
+                                            </select>
+                                            </label>
+                                        </div>
+                                        <div class='form-group'>
+                                            <label>Name <input name = 'mfname' type='text'/></label>
+                                            <label>Required  <select class='form-control' name = 'mfreq'>
+                                                <option>No</option>
+                                                <option>Yes</option></select>
+                                            </label>
+                                            <label>Field Type  <select class='form-control' name = 'mffieldtype'>
+                                                <option>Text</option>
+                                                <option>Number</option>
+                                                <option>Date</option>
+                                            </select>
+                                            </label>
+                                        </div>
+                                        <div class='form-group'>
+                                            <label>Name <input name = 'mfname' type='text'/></label>
+                                            <label>Required  <select class='form-control' name = 'mfreq'>
+                                                <option>No</option>
+                                                <option>Yes</option></select>
+                                            </label>
+                                            <label>Field Type  <select class='form-control' name = 'mffieldtype'>
+                                                <option>Text</option>
+                                                <option>Number</option>
+                                                <option>Date</option>
+                                            </select>
+                                            </label>
+                                        </div>
+                                        <div class='form-group'>
+                                            <label>Name <input name = 'mfname' type='text'/></label>
+                                            <label>Required  <select class='form-control' name = 'mfreq'>
+                                                <option>No</option>
+                                                <option>Yes</option></select>
+                                            </label>
+                                            <label>Field Type  <select class='form-control' name = 'mffieldtype'>
+                                                <option>Text</option>
+                                                <option>Number</option>
+                                                <option>Date</option>
+                                            </select>
+                                            </label>
+                                        </div>
+                                        <div class='form-group'>
+                                            <label>Name <input name = 'mfname' type='text'/></label>
+                                            <label>Required  <select class='form-control' name = 'mfreq'>
+                                                <option>No</option>
+                                                <option>Yes</option></select>
+                                            </label>
+                                            <label>Field Type  <select class='form-control' name = 'mffieldtype'>
+                                                <option>Text</option>
+                                                <option>Number</option>
+                                                <option>Date</option>
+                                            </select>
+                                            </label>
+                                        </div>
+                                        <div class='form-group'>
+                                            <label>Name <input name = 'mfname' type='text'/></label>
+                                            <label>Required  <select class='form-control' name = 'mfreq'>
+                                                <option>No</option>
+                                                <option>Yes</option></select>
+                                            </label>
+                                            <label>Field Type  <select class='form-control' name = 'mffieldtype'>
+                                                <option>Text</option>
+                                                <option>Number</option>
+                                                <option>Date</option>
+                                            </select>
+                                            </label>
+                                        </div>
+                                        <div class='form-group'>
+                                            <label>Name <input name = 'mfname' type='text'/></label>
+                                            <label>Required  <select class='form-control' name = 'mfreq'>
+                                                <option>No</option>
+                                                <option>Yes</option></select>
+                                            </label>
+                                            <label>Field Type  <select class='form-control' name = 'mffieldtype'>
+                                                <option>Text</option>
+                                                <option>Number</option>
+                                                <option>Date</option>
+                                            </select>
+                                            </label>
+                                        </div>
+                                        <div class='form-group'>
+                                            <label>Name <input name = 'mfname' type='text'/></label>
+                                            <label>Required  <select class='form-control' name = 'mfreq'>
+                                                <option>No</option>
+                                                <option>Yes</option></select>
+                                            </label>
+                                            <label>Field Type  <select class='form-control' name = 'mffieldtype'>
+                                                <option>Text</option>
+                                                <option>Number</option>
+                                                <option>Date</option>
+                                            </select>
+                                            </label>
+                                        </div>
+                                        <button class="btn btn-default" type="reset" value="reset">Reset</button>
+                                        <button class="btn btn-default" type="submit" value="submit">Submit</button>
                                     </form>   
                                 </div>
                             </div>

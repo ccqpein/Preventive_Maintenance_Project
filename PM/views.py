@@ -1,10 +1,11 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import permission_required, login_required
 from django.http import HttpResponseRedirect
+from django.forms.models import model_to_dict
 
 # Create your views here.
 # from django.contrib.auth.models import User
-from .models import Equipment, CheckList, DailyReport, Order, SafetyCheck, MyUser
+from .models import Equipment, CheckList, DailyReport, Order, SafetyCheck, MyUser, MaintenanceContent, MaintenanceSchedule
 from .forms import RegisterFrom
 from datetime import datetime
 
@@ -77,8 +78,51 @@ def addEquipment(request):
 @login_required(login_url="/login/")
 @permission_required('PM.view_Equipment', login_url='/login/')
 def addMaintenance(request):
-    if not request.GET:
-        return render(request, 'PM/NewMaintenance.html', {'lalala': [2, 3, 4]})
+    if request.method != 'GET':
+        data = request.POST
+        mt = MaintenanceSchedule(
+            ms_name=data['name'],
+            ms_serial_num=data['serial_num'],
+            ms_inter_part=data['internal_part_num'],
+
+            ms_tools_name=" -*- ".join(request.POST.getlist('ToolName')),
+            ms_tools_qty=" -*- ".join(request.POST.getlist('ToolQty')),
+            ms_cons_name=" -*- ".join(request.POST.getlist('ConsumName')),
+            ms_cons_qty=" -*- ".join(request.POST.getlist('ConsumQty')),
+
+            ms_form_names=" -*- ".join(request.POST.getlist('mfname')),
+            ms_form_reqs=" -*- ".join(request.POST.getlist('mfreq')),
+            ms_form_fields=" -*- ".join(request.POST.getlist('mffieldtype')),
+        )
+        mt.save()
+        return render(request, 'PM/message.html',
+                      {'message': "save successful"})
+    else:
+        return render(request, 'PM/NewMaintenance.html')
+
+
+def viewMain(request, form_ID):
+    if request.method != 'GET':
+        data = request.POST
+        print(data)
+        mc = MaintenanceContent(
+            mc_temp=MaintenanceSchedule.objects.get(id=form_ID),
+            mc_content=" -*- ".join(request.POST.getlist('values'))
+        )
+        mc.save()
+        return render(request, 'PM/message.html',
+                      {'message': "submit successful"})
+    else:
+        lines = model_to_dict(get_object_or_404(
+            MaintenanceSchedule, id=form_ID))
+        labels = lines['ms_form_names'].split(' -*- ')
+        reqs = lines['ms_form_reqs'].split(' -*- ')
+        types = lines['ms_form_fields'].split(' -*- ')
+        MT = [(labels[i], reqs[i], types[i]) for i in range(len(labels))]
+        return render(request, 'PM/Maintenance.html',
+                      {'MT': MT,
+                       'form_ID': form_ID,
+                       'mainName': lines['ms_name']})
 
 
 @login_required(login_url="/login/")
@@ -166,6 +210,7 @@ def dailyReport(request):
 def orderRequest(request):
     if request.method != 'GET':
         data = request.POST
+        print(data)
         od = Order(
             ord_date=data['dateReq'],
             ord_req_by=data['reqBy'],
@@ -211,7 +256,16 @@ def safetycheck(request):
         return render(request, 'PM/SafetyCheck.html')
 
 
+def viewTasks(request):
+    if request.method == 'GET':
+        od = Order.objects.filter(ord_complete=False)
+        eq = Equipment.objects.filter()
+        return render(request, 'PM/viewForm.html',
+                      {'titles': ["Type", "Date", 'View'],
+                       'content': [(11, 22, 33)]})
+
+
 def formTest(request):
     return render(request, 'PM/viewForm.html',
                   {'titles': [1, 2, 3, 4, 5],
-                   'content': [(11, 22, 33, 44, 55)]})
+                   'content': [(11, 22, 33, 44)]})

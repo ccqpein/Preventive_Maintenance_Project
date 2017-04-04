@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^report/$', views.dailyReport, name="dailyreport"),
     url(r'^order/$', views.orderRequest, name="order"),
     url(r'^safetycheck/$', views.safetycheck, name="safety"),
+    url(r'^viewMain/(?P<form_ID>[0-9]+)/$', views.viewMain, name="viewMT"),
 
     url(r'^form/$', views.formTest, name="test"),
 ]
