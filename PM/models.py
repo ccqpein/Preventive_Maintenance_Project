@@ -24,6 +24,7 @@ class Equipment(models.Model):
     eq_contact_notes = models.CharField(max_length=100)
 
     eq_add_date = models.DateField(auto_now=True)
+    eq_last_main_date = models.DateField()
 
 
 class EquipmentTool(models.Model):
@@ -52,6 +53,7 @@ class MaintenanceContent(models.Model):
     mc_temp = models.ForeignKey(MaintenanceSchedule)
     mc_content = models.CharField(max_length=2000)
     mc_date = models.DateField(auto_now=True)
+    mc_last_main_date = models.DateField()
 
 
 class DailyReport(models.Model):

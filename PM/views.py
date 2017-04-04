@@ -7,14 +7,38 @@ from django.forms.models import model_to_dict
 # from django.contrib.auth.models import User
 from .models import Equipment, CheckList, DailyReport, Order, SafetyCheck, MyUser, MaintenanceContent, MaintenanceSchedule
 from .forms import RegisterFrom
-from datetime import datetime
+from datetime import datetime, timedelta
+
+
+def taskLeft():
+    resultList = []
+    od = Order.objects.filter(ord_complete=False)
+    for c in od:
+        resultList.append(
+            ("Work Order", c.ord_date, "\\"))
+
+    eq = Equipment.objects.filter(
+        eq_last_main_date=(datetime.today() - timedelta(days=7)))
+    for c in eq:
+        resultList.append(("Equipment", datetime.today(),
+                           "\\"))
+
+    mainT = MaintenanceContent.objects.filter(
+        mc_last_main_date=(datetime.today() - timedelta(days=7)))
+    for c in mainT:
+        resultList.append(("Maintenance", datetime.today(),
+                           "\\"))
+
+    return resultList
 
 
 @login_required(login_url="/login/")
 def index(request):
     orderLeft = Order.objects.filter(ord_complete=False).count()
+    tasks = taskLeft()
     return render(request, 'PM/index.html',
-                  {'order_left': orderLeft}
+                  {'order_left': orderLeft,
+                   'all_left': len(tasks)}
                   )
 
 
@@ -258,11 +282,11 @@ def safetycheck(request):
 
 def viewTasks(request):
     if request.method == 'GET':
-        od = Order.objects.filter(ord_complete=False)
-        eq = Equipment.objects.filter()
+        resultList = taskLeft()
+
         return render(request, 'PM/viewForm.html',
-                      {'titles': ["Type", "Date", 'View'],
-                       'content': [(11, 22, 33)]})
+                      {'titles': ["Type", "Add Date", 'Due Date', 'View'],
+                       'content': resultList})
 
 
 def formTest(request):

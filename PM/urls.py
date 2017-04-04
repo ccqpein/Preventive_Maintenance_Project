@@ -27,6 +27,7 @@ urlpatterns = [
     url(r'^order/$', views.orderRequest, name="order"),
     url(r'^safetycheck/$', views.safetycheck, name="safety"),
     url(r'^viewMain/(?P<form_ID>[0-9]+)/$', views.viewMain, name="viewMT"),
+    url(r'^viewTasks/$', views.viewTasks, name="viewTasks"),
 
     url(r'^form/$', views.formTest, name="test"),
 ]

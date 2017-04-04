@@ -74,8 +74,10 @@
                         </a>
 
                         <ul class="dropdown-menu dropdown-user">
+                            {%if request.user.is_staff%}
                             <li><a href='/admin/'><i class="fa fa-sign-out fa-fw"></i> Admin Page</a>
-                            </li>                            
+                            </li>
+                            {%endif%}
                             <li><a href="{% url 'PM:logout' %}"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                             </li>
                         </ul>                        
@@ -143,8 +145,8 @@
                         </a>
                     </div>
                     {% endif %}
-            
-            {% if perms.PM.add_checklist %}
+                    <!-- 
+                    {% if perms.PM.add_checklist %}
                     <div class="col-lg-3 col-md-6">
 		        <a href="{% url 'PM:checklist' %}">
 			    <div class="panel panel-yellow">
@@ -162,7 +164,7 @@
                             </div> 
                         </a>
                     </div>
-                    {% endif %}
+                    {% endif %} -->
                     {% if perms.PM.add_dailyreport %}        
                     <div class="col-lg-3 col-md-6">
 		        <a href="{% url 'PM:dailyreport' %}">
@@ -185,7 +187,7 @@
                     {% if perms.PM.add_order %}
                     <div class="col-lg-3 col-md-6">
 		        <a href="{% url 'PM:order' %}">
-			    <div class="panel panel-primary">
+			    <div class="panel panel-yellow">
 			        <div class="panel-heading">
 				    <div class="row">
 				        <div class="col-xs-3">
@@ -193,7 +195,7 @@
 				        </div>
 				        <div class="col-xs-9 text-right">
 					    <div class="huge">{{ order_left }}</div>
-					    <div>Work Order Request</div>
+					    <div>Add New Work Orders</div>
 				        </div>
 				    </div>
 			        </div>
@@ -201,6 +203,28 @@
                         </a>
                     </div>
                     {% endif %}
+
+                    {%if perms.PM.add_dailyreport %}
+                    <div class="col-lg-3 col-md-6">
+		        <a href="{% url 'PM:viewTasks' %}">
+			    <div class="panel panel-primary">
+			        <div class="panel-heading">
+				    <div class="row">
+				        <div class="col-xs-3">
+					    <i class="fa fa-shopping-cart fa-5x"></i>
+				        </div>
+				        <div class="col-xs-9 text-right">
+					    <div class="huge">{{ all_left }}</div>
+					    <div>View Tasks List</div>
+				        </div>
+				    </div>
+			        </div>
+                            </div> 
+                        </a>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- 
                     {%if perms.PM.add_safetycheck %}
                     <div class="col-lg-3 col-md-6">
 		        <a href="{% url 'PM:safety' %}">
@@ -219,7 +243,7 @@
                             </div> 
                         </a>
                     </div>
-                    {% endif %}
+                    {% endif %} -->
                 </div>
                 <!-- /.row -->
                 <div class="row">
