@@ -117,7 +117,7 @@
 					    <i class="fa fa-tasks fa-5x"></i>
 				        </div>
 				        <div class="col-xs-9 text-right">
-					    <div class="huge">12</div>
+					    <div class="huge">{{eq_left}}</div>
 					    <div>Add Equipment</div>
 				        </div>
 				    </div>
@@ -136,7 +136,7 @@
 					    <i class="fa fa-wrench fa-5x"></i>
 				        </div>
 				        <div class="col-xs-9 text-right">
-					    <div class="huge">12</div>
+					    <div class="huge">{{mainLeft}}</div>
 					    <div>Add Maintenance</div>
 				        </div>
 				    </div>
@@ -175,7 +175,7 @@
 					    <i class="fa fa-files-o fa-5x"></i>
 				        </div>
 				        <div class="col-xs-9 text-right">
-					    <div class="huge">12</div>
+					    <div class="huge">{{dpLeft}}</div>
 					    <div>Daily Report</div>
 				        </div>
 				    </div>
@@ -261,13 +261,13 @@
 				        <marquee behavior="scroll" bgcolor="#CEE9FE" loop="-1" width="317%" id="timestamp">
 					    <i>
 					        <font color="blue">
-						    Today's date is : 
+						    Hi, {{ request.user.username }} today's date is : 
 						    <strong>
 						        <span id="time"></span>
 						    </strong>           
 					        </font>
 					    </i>
-					    <script>	
+					    <script>
 					     var today = new Date();
 					     document.getElementById('time').innerHTML=today;
 					    </script>

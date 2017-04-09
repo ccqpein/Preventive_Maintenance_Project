@@ -5,7 +5,7 @@ from django.forms.models import model_to_dict
 
 # Create your views here.
 # from django.contrib.auth.models import User
-from .models import Equipment, CheckList, DailyReport, Order, SafetyCheck, MyUser, MaintenanceContent, MaintenanceSchedule
+from .models import Equipment, DailyReport, Order, MyUser, MaintenanceContent, MaintenanceSchedule
 from .forms import RegisterFrom
 from datetime import datetime, timedelta
 
@@ -15,19 +15,19 @@ def taskLeft():
     od = Order.objects.filter(ord_complete=False)
     for c in od:
         resultList.append(
-            ("Work Order", c.ord_date, "\\"))
+            ("Work Order", c.ord_date, "", "/viewOrders/" + str(c.id) + "/"))
 
     eq = Equipment.objects.filter(
-        eq_last_main_date=(datetime.today() - timedelta(days=7)))
+        eq_next_main_date=datetime.today())
     for c in eq:
-        resultList.append(("Equipment", datetime.today(),
-                           "\\"))
+        resultList.append(("Equipment", datetime.today(), "Today",
+                           "/viewEq/" + str(c.id) + "/"))
 
-    mainT = MaintenanceContent.objects.filter(
-        mc_last_main_date=(datetime.today() - timedelta(days=7)))
+    mainT = MaintenanceSchedule.objects.filter(
+        ms_next_main_date=datetime.today())
     for c in mainT:
-        resultList.append(("Maintenance", datetime.today(),
-                           "\\"))
+        resultList.append(("Maintenance", datetime.today(), "Today",
+                           "/viewMain/" + str(c.id) + "/"))
 
     return resultList
 
@@ -35,9 +35,15 @@ def taskLeft():
 @login_required(login_url="/login/")
 def index(request):
     orderLeft = Order.objects.filter(ord_complete=False).count()
+    equipmentLeft = len(Equipment.objects.all())
+    maintenanceLeft = len(MaintenanceSchedule.objects.all())
+    dailyReportLeft = len(DailyReport.objects.filter(dp_date=datetime.today()))
     tasks = taskLeft()
     return render(request, 'PM/index.html',
                   {'order_left': orderLeft,
+                   'eq_left': equipmentLeft,
+                   'mainLeft': maintenanceLeft,
+                   'dpLeft': dailyReportLeft,
                    'all_left': len(tasks)}
                   )
 
@@ -89,10 +95,11 @@ def addEquipment(request):
         eq_type=data['type'],
         eq_expir_date=data['warranty_expir_date'],
         eq_purchase_date=data['purchase_date'],
-        eq_manufacturer=data['manufacturer_date'],
+        eq_manufacturer=data['manufacturer'],
         eq_internal_part_num=data['internal_part_num'],
         eq_contact_notes=data['note'],
         eq_maintenance_schedule=data['schedule'],
+        eq_quantity_left=data['quantity_left']
     )
     eq.save()
 
@@ -104,6 +111,7 @@ def addEquipment(request):
 def addMaintenance(request):
     if request.method != 'GET':
         data = request.POST
+        print(data)
         mt = MaintenanceSchedule(
             ms_name=data['name'],
             ms_serial_num=data['serial_num'],
@@ -111,12 +119,11 @@ def addMaintenance(request):
 
             ms_tools_name=" -*- ".join(request.POST.getlist('ToolName')),
             ms_tools_qty=" -*- ".join(request.POST.getlist('ToolQty')),
-            ms_cons_name=" -*- ".join(request.POST.getlist('ConsumName')),
-            ms_cons_qty=" -*- ".join(request.POST.getlist('ConsumQty')),
 
             ms_form_names=" -*- ".join(request.POST.getlist('mfname')),
             ms_form_reqs=" -*- ".join(request.POST.getlist('mfreq')),
             ms_form_fields=" -*- ".join(request.POST.getlist('mffieldtype')),
+            ms_maintenance_schedule=data['schedule']
         )
         mt.save()
         return render(request, 'PM/message.html',
@@ -129,15 +136,24 @@ def viewMain(request, form_ID):
     if request.method != 'GET':
         data = request.POST
         print(data)
-        mc = get_object_or_404(MaintenanceContent, id=form_ID)
-        mc.mc_content = " -*- ".join(request.POST.getlist('values'))
+        ms = MaintenanceSchedule.objects.get(
+            id=form_ID)
+        mc = MaintenanceContent(
+            mc_temp=ms,
+            mc_content=" -*- ".join(request.POST.getlist('values')),
+        )
         mc.save()
+
+        ms.ms_last_main_date = datetime.today()
+        dt = datetime.today() + timedelta(ms.ms_maintenance_schedule * 7)
+        ms.ms_next_main_date = datetime(dt.year, dt.month, dt.day)
+        ms.save()
+
         return render(request, 'PM/message.html',
                       {'message': "submit successful"})
     else:
-        tempID = get_object_or_404(MaintenanceContent, id=form_ID).mc_temp_id
         lines = model_to_dict(get_object_or_404(
-            MaintenanceSchedule, id=tempID))
+            MaintenanceSchedule, id=form_ID))
         print(lines)
 
         temp = [('ms_name', lines['ms_name']),
@@ -148,76 +164,16 @@ def viewMain(request, form_ID):
                 ]
 
         labels = lines['ms_form_names'].split(' -*- ')
+        labels = list(filter(lambda x: x != '' and x != ' -*-', labels))
         reqs = lines['ms_form_reqs'].split(' -*- ')
         types = lines['ms_form_fields'].split(' -*- ')
         MT = [(labels[i], reqs[i], types[i]) for i in range(len(labels))]
-
+        print(MT)
         return render(request, 'PM/Maintenance.html',
                       {'MT': MT,
                        'form_ID': form_ID,
                        'mainName': lines['ms_name'],
                        'temp': temp})
-
-
-@login_required(login_url="/login/")
-@permission_required('PM.add_checklist', login_url='/login/')
-def checkList(request):
-    if request.method != 'GET':
-        data = request.POST
-        cl = CheckList(
-            cl_plate_rating=data['name_plate_rating'],
-            cl_date=data['date'],
-            cl_operator=data['operator'],
-
-            cl_start_time=data['StartT'],
-            cl_stop_time=data['StopT'],
-            cl_cool_time=data['CoolDown'],
-
-            cl_oil_level=data['OilLevel'],
-            cl_oil_add=data['OilAdd'],
-
-            cl_radiator_level=data['RadiatorL'],
-            cl_radiator_add=data['RadiatorAdd'],
-
-            cl_battery_level=data['BatteryL'],
-            cl_battery_charger=data['BatteryCharger'],
-
-            cl_oil_pressure=data['OilPressure'],
-            cl_fuel_tank=data['FuelInTank'],
-            cl_engine_temp=data['EngineTemp'],
-            cl_block_heater=data['BlockHeater'],
-            cl_indicator_panel_light=data['IndicatorPanelLight'],
-
-            cl_amp_1=data['AMP1'],
-            cl_amp_2=data['AMP2'],
-            cl_amp_3=data['AMP3'],
-
-            cl_eptsw=data['EPTSW'],
-            cl_epilw=data['EPILW'],
-            cl_fptsw=data['FPTSW'],
-            cl_fpilw=data['FPILW'],
-            cl_cirnapmpbg=data['CIRNAPMPBG'],
-            cl_cirnapmpbgcomment=data['CIRNAPMPBGComment'],
-            cl_grbblw=data['GRBBLW'],
-
-            cl_fire_dampers2=data['FDO21'] + '/'
-            + data['FDO22'] + '/' + data['FDO23'] + '/'
-            + data['FDO24'] + '/' + data['FDO25'],
-            cl_fire_dampers3=data['FDO31'] + '/'
-            + data['FDO32'] + '/' + data['FDO33'] + '/'
-            + data['FDO34'] + '/' + data['FDO35'],
-            cl_fire_dampers4=data['FDO41'] + '/'
-            + data['FDO42'] + '/' + data['FDO43'] + '/'
-            + data['FDO44'] + '/' + data['FDO45'],
-
-            cl_checkbox=data['checkbox'],
-
-        )
-        cl.save()
-        return render(request, 'PM/message.html',
-                      {'message': "save successful"})
-    else:
-        return render(request, 'PM/CheckList.html')
 
 
 @login_required(login_url="/login/")
@@ -266,29 +222,6 @@ def orderRequest(request):
         return render(request, 'PM/order.html')
 
 
-@login_required(login_url="/login/")
-@permission_required('PM.add_safetycheck', login_url='/login/')
-def safetycheck(request):
-    if request.method != 'GET':
-        data = request.POST
-        sc = SafetyCheck(
-            sc_location=data['location'],
-            sc_desc=data['descrip'],
-            sc_brand_name=data['brandname'],
-            sc_inspection_date=data['inspectiondate'],
-            sc_inspection_by=data['inspectionby'],
-            sc_next_inspection_date=data['nextinspectiondate'],
-            sc_condition=data['condition'],
-            sc_comment=data['comments'],
-            sc_date=datetime.now().date(),
-        )
-        sc.save()
-        return render(request, 'PM/message.html',
-                      {'message': "save successful"})
-    else:
-        return render(request, 'PM/SafetyCheck.html')
-
-
 def viewTasks(request):
     if request.method == 'GET':
         resultList = taskLeft()
@@ -327,6 +260,32 @@ def viewOrders(request, orderNumber):
         else:
             od.ord_complete = False
         od.save()
+        return render(request, 'PM/message.html',
+                      {'message': "save successful"})
+
+
+def viewEq(request, eqNumber):
+    if request.method == 'GET':
+        eq = Equipment.objects.get(id=eqNumber)
+        content = {'eqNumber': eqNumber,
+                   'name': eq.eq_name,
+                   'serial_num': eq.eq_serial_num,
+                   'type': eq.eq_type,
+                   'warranty': eq.eq_expir_date,
+                   'purchase': eq.eq_purchase_date,
+                   'manufacturer': eq.eq_manufacturer,
+                   'internal_part_num': eq.eq_internal_part_num,
+                   'schedule': eq.eq_maintenance_schedule,
+                   'note': eq.eq_contact_notes, }
+
+        return render(request, 'PM/viewEquipment.html',
+                      content)
+    else:
+        eq = Equipment.objects.get(id=eqNumber)
+        eq.eq_last_main_date = datetime.today()
+        dt = datetime.today() + timedelta(eq.eq_maintenance_schedule * 7)
+        eq.eq_next_main_date = datetime(dt.year, dt.month, dt.day)
+        eq.save()
         return render(request, 'PM/message.html',
                       {'message': "save successful"})
 

@@ -19,12 +19,13 @@ class Equipment(models.Model):
     eq_expir_date = models.DateField()
     eq_purchase_date = models.DateField()
     eq_manufacturer = models.CharField(max_length=200)
-    eq_internal_part_num = models.IntegerField(default=0)
-    eq_maintenance_schedule = models.IntegerField(default=0)  # number of week
+    eq_internal_part_num = models.CharField(max_length=100)
+    eq_maintenance_schedule = models.IntegerField(default=1)  # number of week
     eq_contact_notes = models.CharField(max_length=100)
 
     eq_add_date = models.DateField(auto_now=True)
-    eq_last_main_date = models.DateField()
+    eq_last_main_date = models.DateField(null=True)
+    eq_next_main_date = models.DateField(null=True)
 
 
 class EquipmentTool(models.Model):
@@ -35,6 +36,7 @@ class EquipmentTool(models.Model):
 
 class MaintenanceSchedule(models.Model):
     ms_name = models.CharField(max_length=100)
+    ms_date = models.DateField(auto_now=True)
     ms_serial_num = models.CharField(max_length=100)
     ms_inter_part = models.CharField(max_length=100)
     ms_tools_name = models.CharField(max_length=500)
@@ -43,15 +45,16 @@ class MaintenanceSchedule(models.Model):
     ms_form_names = models.CharField(max_length=1000)
     ms_form_reqs = models.CharField(max_length=100)
     ms_form_fields = models.CharField(max_length=200)
+    ms_maintenance_schedule = models.IntegerField(default=1)  # number of week
 
-    ms_date = models.DateField(auto_now=True)
+    ms_last_main_date = models.DateField(null=True)
+    ms_next_main_date = models.DateField(null=True)
 
 
 class MaintenanceContent(models.Model):
     mc_temp = models.ForeignKey(MaintenanceSchedule)
     mc_content = models.CharField(max_length=2000)
     mc_date = models.DateField(auto_now=True)
-    mc_last_main_date = models.DateField()
 
 
 class DailyReport(models.Model):
@@ -78,7 +81,7 @@ class Order(models.Model):
             ("view_order", "Can view orders"),
         )
 
-    ord_date = models.DateField()
+    ord_date = models.DateField(auto_now=True)
     ord_req_by = models.CharField(max_length=50)
     ord_building = models.CharField(max_length=100)
     ord_floor = models.CharField(max_length=50)
@@ -88,80 +91,13 @@ class Order(models.Model):
     ord_work_ord = models.CharField(max_length=50)
     ord_date_issue = models.DateField()
     ord_employee = models.CharField(max_length=100)
-    ord_date_comp = models.DateField()
+    ord_date_comp = models.DateField(null=True)
     ord_comments = models.CharField(max_length=1000)
 
     ord_complete = models.BooleanField(default=False)
 
     def __str__(self):
         return self.ord_date.__str__()
-
-
-class CheckList(models.Model):
-
-    class Meta:
-        permissions = (
-            ("view_CheckList", "Can view CheckList"),
-        )
-
-    cl_plate_rating = models.CharField(max_length=100)
-    cl_date = models.DateField()
-    cl_operator = models.CharField(max_length=100)
-
-    cl_start_time = models.CharField(max_length=100)
-    cl_stop_time = models.CharField(max_length=100)
-    cl_cool_time = models.CharField(max_length=100)
-
-    cl_oil_level = models.CharField(max_length=100)
-    cl_oil_add = models.CharField(max_length=100)
-
-    cl_radiator_level = models.CharField(max_length=100)
-    cl_radiator_add = models.CharField(max_length=100)
-
-    cl_battery_level = models.CharField(max_length=100)
-    cl_battery_charger = models.CharField(max_length=100)
-
-    cl_oil_pressure = models.CharField(max_length=100)
-    cl_fuel_tank = models.CharField(max_length=100)
-    cl_engine_temp = models.CharField(max_length=100)
-    cl_block_heater = models.CharField(max_length=100)
-    cl_indicator_panel_light = models.CharField(max_length=100)
-
-    cl_amp_1 = models.CharField(max_length=100)
-    cl_amp_2 = models.CharField(max_length=100)
-    cl_amp_3 = models.CharField(max_length=100)
-
-    cl_eptsw = models.CharField(max_length=20)
-    cl_epilw = models.CharField(max_length=20)
-    cl_fptsw = models.CharField(max_length=20)
-    cl_fpilw = models.CharField(max_length=20)
-    cl_cirnapmpbg = models.CharField(max_length=20)
-    cl_cirnapmpbgcomment = models.CharField(max_length=200)
-    cl_grbblw = models.CharField(max_length=20)
-
-    cl_fire_dampers2 = models.CharField(max_length=150)
-    cl_fire_dampers3 = models.CharField(max_length=150)
-    cl_fire_dampers4 = models.CharField(max_length=150)
-
-    cl_checkbox = models.CharField(max_length=20)
-
-
-class SafetyCheck(models.Model):
-
-    class Meta:
-        permissions = (
-            ("view_SafetyCheck", "Can view safety check"),
-        )
-
-    sc_location = models.CharField(max_length=50)
-    sc_desc = models.CharField(max_length=100)
-    sc_brand_name = models.CharField(max_length=50)
-    sc_inspection_date = models.DateField()
-    sc_inspection_by = models.CharField(max_length=50)
-    sc_next_inspection_date = models.DateField()
-    sc_condition = models.CharField(max_length=50)
-    sc_comment = models.CharField(max_length=200)
-    sc_date = models.DateField()
 
 
 class MyUser(AbstractUser):

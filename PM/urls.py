@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'^viewTasks/$', views.viewTasks, name="viewTasks"),
     url(r'^viewOrders/(?P<orderNumber>[0-9]+)/$',
         views.viewOrders, name="viewOrders"),
+    url(r'^viewEq/(?P<eqNumber>[0-9]+)/$', views.viewEq, name="viewEq"),
 
     url(r'^form/$', views.formTest, name="test"),
 ]

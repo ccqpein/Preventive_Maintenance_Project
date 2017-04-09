@@ -1,0 +1,75 @@
+{% include 'PM/formHead.html' %}
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header"> Add Equipment</h1>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                            Equipment Detail
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <form role="form" action="/viewEq/{{eqNumber}}/" method="post">
+                                {% csrf_token %}
+                                <fieldset disabled>
+                                <div class="form-group">
+                                    <label>Name:</label>
+                                    <input class="form-control" type="text" name="name" placeholder="{{name}}"/>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Serial Number:</label>
+                                    <input class="form-control" type="text" name = "serial_num" placeholder="{{serial_num}}"/>
+                                </div>
+                                <div class="form-group">
+                                    <label>Type:</label>
+                                    <input class="form-control" type="text" name = "type" placeholder="{{type}}"/>
+                                </div>
+                                <div class="form-group">
+                                    <label>Warranty Expiration Date:</label>
+                                    <input class="form-control" type="date" name = "warranty_expir_date" placeholder="{{warranty}}"/>
+                                </div>
+                                <div class="form-group">
+                                    <label>Purchase Date:</label>
+                                    <input class="form-control" type="date" name = "purchase_date" placeholder="{{purchase}}"/>
+                                </div>
+                                <div class="form-group">
+                                    <label>Manufacturer:</label>
+                                    <input class="form-control" type="text" name = "manufacturer" placeholder="{{manufacturer}}"/>
+                                </div>
+                                <div class="form-group">
+                                    <label>Internal Part Number:</label>
+                                    <input class="form-control" type="text" name = "internal_part_num" placeholder="{{internal_part_num}}"/>
+                                </div>
+                                <div class="form-group">
+                                    <label>Preventative Maintenance Schedule:</label>
+                                    <label>{{schedule}}</label>                                    
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Vendor Contact Notes:</label>
+                                    <textarea class="form-control" rows="3" name="note" type="text">{{note}}
+                                    </textarea>
+                                </div>
+                                </fieldset>
+                                
+                                <button class="btn btn-default" type="reset" value="reset">Reset</button>
+                                <button class="btn btn-default" type="submit" value="submit">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- /.row (nested) -->
+                </div>
+                <!-- /.panel-body -->
+            </div>
+        </div>
+    </div>
+</div>
+{% include 'PM/formTail.html' %}

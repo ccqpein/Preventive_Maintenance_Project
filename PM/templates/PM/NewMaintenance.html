@@ -68,46 +68,6 @@
                                             </select>
                                         </div>                                        
                                             
-                                        <div class="form-group">
-                                            <label>Consumables Required 1:</label>
-                                            <p class="form-control-static">Name</p>
-                                            <select class="form-control" name="ConsumName">
-                                                <option></option>
-                                            </select>
-
-
-                                            <p class="form-control-static">Quantity</p>
-                                            <select class="form-control" name="ConsumQty">
-                                                <option></option>
-                                            </select>
-                                            
-
-                                            <label>Consumables Required 2:</label>
-                                            <p class="form-control-static">Name</p>
-                                            <select class="form-control" name="ConsumName">
-                                                <option></option>
-                                            </select>
-
-
-                                            <p class="form-control-static">Quantity</p>
-                                            <select class="form-control" name="ConsumQty">
-                                                <option></option>
-                                            </select>
-                                            
-
-                                            <label>Consumables Required 3:</label>
-                                            <p class="form-control-static">Name</p>
-                                            <select class="form-control" name="ConsumName">
-                                                <option></option>
-                                            </select>
-
-
-                                            <p class="form-control-static">Quantity</p>
-                                            <select class="form-control" name="ConsumQty">
-                                                <option></option>
-                                            </select>
-                                            
-                                        </div>                                        
                                         
                                         <label>
                                             Maintenance Form
@@ -217,6 +177,44 @@
                                             </select>
                                             </label>
                                         </div>
+
+                                        <div class="form-group">
+                                            <label>Preventative Maintenance Schedule:</label>
+                                            
+                                            
+                                            <div class="radio">
+                                                <label><input id="Radio1"  name="schedule" type="radio" value="1" />
+                                                    One week
+                                                </label>
+                                            </div>
+                                            
+                                            <div class="radio">
+                                                <label><input id="Radio3"  name="schedule" type="radio" value="2" />
+                                                    Two weeks
+                                                </label>
+                                            </div>
+                                            
+                                            <div class="radio">
+                                                <label><input id="Radio5"  name="schedule" type="radio" value="4" />
+                                                    Four weeks
+                                                </label>
+                                            </div>
+                                            
+                                            <div class="radio">
+                                                <label><input id="Radio7"  name="schedule" type="radio" value="10" />
+                                                    Ten weeks
+                                                </label>
+                                            </div>
+                                            
+                                            <div class="radio">
+                                                <label><input id="Radio2"  name="schedule" type="radio" value="20" />
+                                                    Twenty weeks
+                                                </label>
+                                            </div>
+                                            
+                                        </div>
+                                        
+                                        
                                         <button class="btn btn-default" type="reset" value="reset">Reset</button>
                                         <button class="btn btn-default" type="submit" value="submit">Submit</button>
                                     </form>   
@@ -228,5 +226,5 @@
                     </div>
                 </div>
             </div>
-        </div>
+</div>
 {% include 'PM/formTail.html' %}

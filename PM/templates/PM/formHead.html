@@ -56,6 +56,10 @@
                             <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-user">
+                            {%if request.user.is_staff%}
+                            <li><a href='/admin/'><i class="fa fa-sign-out fa-fw"></i> Admin Page</a>
+                            </li>
+                            {%endif%}                            
                             <li><a href="{% url 'PM:logout' %}"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                             </li>
                         </ul>
