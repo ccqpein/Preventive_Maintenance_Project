@@ -53,10 +53,34 @@ class CustomUserAdmin(UserAdmin):
 class OrderAdmin(admin.ModelAdmin):
     list_display = ('ord_date', 'ord_date_issue', 'ord_req_by')
 
-admin.site.register(Equipment)
-admin.site.register(EquipmentTool)
-admin.site.register(DailyReport)
+
+class EquipmentAdmin(admin.ModelAdmin):
+    list_display = ('eq_name', 'eq_last_main_date', 'eq_next_main_date')
+
+
+class EquipmentToolAdmin(admin.ModelAdmin):
+    list_display = ('tool_name', 'tool_quantity_left')
+
+
+class MaintenanceScheduleAdmin(admin.ModelAdmin):
+    list_display = ('ms_name', 'ms_last_main_date', 'ms_next_main_date')
+
+
+class DailyReportAdmin(admin.ModelAdmin):
+    list_display = ('dp_name', 'dp_date')
+
+
+class MaintenanceContentAdmin(admin.ModelAdmin):
+    list_display = ('get_name', 'mc_date')
+
+    def get_name(self, mo):
+        return mo.mc_temp.ms_name
+
+
+admin.site.register(Equipment, EquipmentAdmin)
+admin.site.register(EquipmentTool, EquipmentToolAdmin)
+admin.site.register(DailyReport, DailyReportAdmin)
 admin.site.register(Order, OrderAdmin)
-admin.site.register(MaintenanceContent)
-admin.site.register(MaintenanceSchedule)
+admin.site.register(MaintenanceSchedule, MaintenanceScheduleAdmin)
+admin.site.register(MaintenanceContent, MaintenanceContentAdmin)
 admin.site.register(MyUser, CustomUserAdmin)

@@ -10,21 +10,30 @@ from .forms import RegisterFrom
 from datetime import datetime, timedelta
 
 
-def taskLeft():
+def taskLeft(time):
     resultList = []
     od = Order.objects.filter(ord_complete=False)
-    for c in od:
-        resultList.append(
-            ("Work Order", c.ord_date, "", "/viewOrders/" + str(c.id) + "/"))
 
-    eq = Equipment.objects.filter(
-        eq_next_main_date=datetime.today())
+    if time == 'today':
+        eq = Equipment.objects.filter(
+            eq_next_main_date=datetime.today())
+        mainT = MaintenanceSchedule.objects.filter(
+            ms_next_main_date=datetime.today())
+        for c in od:
+            resultList.append(
+                ("Work Order", c.ord_date, "", "/viewOrders/" + str(c.id) + "/"))
+
+    else:
+        eq = Equipment.objects.filter(
+            eq_next_main_date__range=(datetime.today() + timedelta(days=1),
+                                      datetime.today() + timedelta(weeks=4)))
+        mainT = MaintenanceSchedule.objects.filter(
+            ms_next_main_date=datetime.today())
+
     for c in eq:
         resultList.append(("Equipment", datetime.today(), "Today",
                            "/viewEq/" + str(c.id) + "/"))
 
-    mainT = MaintenanceSchedule.objects.filter(
-        ms_next_main_date=datetime.today())
     for c in mainT:
         resultList.append(("Maintenance", datetime.today(), "Today",
                            "/viewMain/" + str(c.id) + "/"))
@@ -38,7 +47,7 @@ def index(request):
     equipmentLeft = len(Equipment.objects.all())
     maintenanceLeft = len(MaintenanceSchedule.objects.all())
     dailyReportLeft = len(DailyReport.objects.filter(dp_date=datetime.today()))
-    tasks = taskLeft()
+    tasks = taskLeft('today')
     return render(request, 'PM/index.html',
                   {'order_left': orderLeft,
                    'eq_left': equipmentLeft,
@@ -224,11 +233,11 @@ def orderRequest(request):
 
 def viewTasks(request):
     if request.method == 'GET':
-        resultList = taskLeft()
-
+        resultList = taskLeft(time='today')
+        resultList2 = taskLeft(time='whatever')
         return render(request, 'PM/viewForm.html',
                       {'titles': ["Type", "Add Date", 'Due Date', 'View'],
-                       'content': resultList})
+                       'content': resultList + resultList2})
 
 
 def viewOrders(request, orderNumber):

@@ -70,9 +70,6 @@ class DailyReport(models.Model):
     dp_work_performed = models.CharField(max_length=1000)
     dp_problems_ident = models.CharField(max_length=1000)
 
-    def __str__(self):
-        return self.dp_name
-
 
 class Order(models.Model):
 
