@@ -5,7 +5,7 @@ from django.forms.models import model_to_dict
 
 # Create your views here.
 # from django.contrib.auth.models import User
-from .models import Equipment, DailyReport, Order, MyUser, MaintenanceContent, MaintenanceSchedule
+from .models import Equipment, EquipmentTool, DailyReport, Order, MyUser, MaintenanceContent, MaintenanceSchedule
 from .forms import RegisterFrom
 from datetime import datetime, timedelta
 
@@ -23,20 +23,28 @@ def taskLeft(time):
             resultList.append(
                 ("Work Order", c.ord_date, "", "/viewOrders/" + str(c.id) + "/"))
 
+        for c in eq:
+            resultList.append(("Equipment", c.eq_add_date, "Today",
+                               "/viewEq/" + str(c.id) + "/"))
+
+        for c in mainT:
+            resultList.append(("Maintenance", c.ms_date, "Today",
+                               "/viewMain/" + str(c.id) + "/"))
+
     else:
         eq = Equipment.objects.filter(
             eq_next_main_date__range=(datetime.today() + timedelta(days=1),
                                       datetime.today() + timedelta(weeks=4)))
         mainT = MaintenanceSchedule.objects.filter(
-            ms_next_main_date=datetime.today())
+            ms_next_main_date__range=(datetime.today() + timedelta(days=1),
+                                      datetime.today() + timedelta(weeks=4)))
+        for c in eq:
+            resultList.append(("Equipment", c.eq_add_date, c.eq_next_main_date,
+                               "/viewEq/" + str(c.id) + "/"))
 
-    for c in eq:
-        resultList.append(("Equipment", datetime.today(), "Today",
-                           "/viewEq/" + str(c.id) + "/"))
-
-    for c in mainT:
-        resultList.append(("Maintenance", datetime.today(), "Today",
-                           "/viewMain/" + str(c.id) + "/"))
+        for c in mainT:
+            resultList.append(("Maintenance", c.ms_date, c.ms_next_main_date,
+                               "/viewMain/" + str(c.id) + "/"))
 
     return resultList
 
@@ -46,8 +54,14 @@ def index(request):
     orderLeft = Order.objects.filter(ord_complete=False).count()
     equipmentLeft = len(Equipment.objects.all())
     maintenanceLeft = len(MaintenanceSchedule.objects.all())
-    dailyReportLeft = len(DailyReport.objects.filter(dp_date=datetime.today()))
+    if not request.user.is_staff:
+        dailyReportLeft = len(DailyReport.objects.filter(
+            dp_date=datetime.today(), dp_user=request.user))
+    else:
+        dailyReportLeft = len(DailyReport.objects.filter(
+            dp_date=datetime.today()))
     tasks = taskLeft('today')
+    print(request.user)
     return render(request, 'PM/index.html',
                   {'order_left': orderLeft,
                    'eq_left': equipmentLeft,
@@ -121,7 +135,7 @@ def addMaintenance(request):
     if request.method != 'GET':
         data = request.POST
         print(data)
-        mt = MaintenanceSchedule(
+        ms = MaintenanceSchedule(
             ms_name=data['name'],
             ms_serial_num=data['serial_num'],
             ms_inter_part=data['internal_part_num'],
@@ -132,13 +146,18 @@ def addMaintenance(request):
             ms_form_names=" -*- ".join(request.POST.getlist('mfname')),
             ms_form_reqs=" -*- ".join(request.POST.getlist('mfreq')),
             ms_form_fields=" -*- ".join(request.POST.getlist('mffieldtype')),
-            ms_maintenance_schedule=data['schedule']
+            ms_maintenance_schedule=data['schedule'],
         )
-        mt.save()
+        dt = datetime.today() + \
+            timedelta(int(data['schedule']) * 7)
+        ms.ms_next_main_date = datetime(dt.year, dt.month, dt.day)
+        ms.save()
         return render(request, 'PM/message.html',
                       {'message': "save successful"})
     else:
-        return render(request, 'PM/NewMaintenance.html')
+        tools = [i.tool_name for i in EquipmentTool.objects.all()]
+        return render(request, 'PM/NewMaintenance.html',
+                      {'toolnames': tools, })
 
 
 def viewMain(request, form_ID):
@@ -167,20 +186,24 @@ def viewMain(request, form_ID):
 
         temp = [('ms_name', lines['ms_name']),
                 ('serial number', lines['ms_serial_num']),
-                ('internal part number', lines['ms_inter_part']),
-                ('tools name', lines['ms_tools_name']),
-                ('tools quantity', lines['ms_tools_name']),
-                ]
+                ('internal part number', lines['ms_inter_part']), ]
+
+        toolstemp = [(lines['ms_tools_name'].split(' -*- ')),
+                     (lines['ms_tools_qty'].split(' -*- ')),
+                     ]
+        toolstemp = list(zip(toolstemp[0], toolstemp[1]))
 
         labels = lines['ms_form_names'].split(' -*- ')
         labels = list(filter(lambda x: x != '' and x != ' -*-', labels))
         reqs = lines['ms_form_reqs'].split(' -*- ')
         types = lines['ms_form_fields'].split(' -*- ')
         MT = [(labels[i], reqs[i], types[i]) for i in range(len(labels))]
+
         print(MT)
         return render(request, 'PM/Maintenance.html',
                       {'MT': MT,
                        'form_ID': form_ID,
+                       'toolstemp': toolstemp,
                        'mainName': lines['ms_name'],
                        'temp': temp})
 
@@ -196,6 +219,7 @@ def dailyReport(request):
             dp_date=data['date'],
             dp_work_performed=data['workperformed'],
             dp_problems_ident=data['problems'],
+            dp_user=request.user,
         )
         dr.save()
         return render(request, 'PM/message.html',

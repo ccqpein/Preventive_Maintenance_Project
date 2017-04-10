@@ -5,12 +5,12 @@ from django.contrib.auth.models import AbstractUser
 # Create your models here.
 
 
-class Equipment(models.Model):
+class MyUser(AbstractUser):
+    phone = models.CharField(max_length=20)
+    note = models.CharField(max_length=500)
 
-    class Meta:
-        permissions = (
-            ("view_Equipment", "Can view equipments"),
-        )
+
+class Equipment(models.Model):
 
     eq_serial_num = models.CharField(max_length=100)
     eq_name = models.CharField(max_length=100)
@@ -59,24 +59,16 @@ class MaintenanceContent(models.Model):
 
 class DailyReport(models.Model):
 
-    class Meta:
-        permissions = (
-            ("view_DailyReport", "Can view daily report"),
-        )
-
     dp_name = models.CharField(max_length=50)
     dp_shift = models.CharField(max_length=50)
     dp_date = models.DateField()
     dp_work_performed = models.CharField(max_length=1000)
     dp_problems_ident = models.CharField(max_length=1000)
 
+    dp_user = models.ForeignKey(MyUser)
+
 
 class Order(models.Model):
-
-    class Meta:
-        permissions = (
-            ("view_order", "Can view orders"),
-        )
 
     ord_date = models.DateField(auto_now=True)
     ord_req_by = models.CharField(max_length=50)
@@ -95,8 +87,3 @@ class Order(models.Model):
 
     def __str__(self):
         return self.ord_date.__str__()
-
-
-class MyUser(AbstractUser):
-    phone = models.CharField(max_length=20)
-    note = models.CharField(max_length=500)

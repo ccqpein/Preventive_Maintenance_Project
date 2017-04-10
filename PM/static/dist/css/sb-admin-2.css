@@ -22,6 +22,13 @@ body {
     border-left: 1px solid #e7e7e7;
   }
 }
+.panel > .panel-heading {
+    background-image: none;
+    background-color: red;
+    color: white;
+
+}
+
 .navbar-top-links {
   margin-right: 0;
 }
@@ -293,7 +300,7 @@ table.dataTable thead .sorting:after {
 .panel-purple > a:hover {
   color: #BA50E1;
 }
-.panel-teal {
+ .panel-teal {
   border-color: #008080;
 }
 .panel-teal > .panel-heading {
@@ -307,7 +314,6 @@ table.dataTable thead .sorting:after {
 .panel-teal > a:hover {
   color: #008080;
 }
-
 .timeline {
   position: relative;
   padding: 20px 0 20px;

@@ -26,6 +26,15 @@
                                             {% endfor %}
                                         </div>
                                         </fieldset>
+
+                                        <fieldset disabled>
+                                            <div class='form-group'>
+                                                {%for i in toolstemp%}
+                                                <label>{{i.0}}</label>
+                                                <input class="form-control" name="unvalues" value="{{i.1}}" />
+                                                {%endfor%}
+                                            </div>
+                                        </fieldset>
                                         
                                         <div class="form-group">
                                             {% for i in MT %}
