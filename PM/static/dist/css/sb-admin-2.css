@@ -22,12 +22,6 @@ body {
     border-left: 1px solid #e7e7e7;
   }
 }
-.panel > .panel-heading {
-    background-image: none;
-    background-color: red;
-    color: white;
-
-}
 
 .navbar-top-links {
   margin-right: 0;
