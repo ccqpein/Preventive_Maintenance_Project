@@ -1,7 +1,9 @@
 FROM django:latest
 
 WORKDIR ./
-COPY . .
+COPY Maintenance /Maintenance
+COPY PM /PM
+COPY manage.py /manage.py
 
-EXPOSE 8000
-CMD ["python", "./manage.py", "runserver", "0.0.0.0:8000"]
+EXPOSE 8080
+CMD ["python", "./manage.py", "runserver", "0.0.0.0:8080"]

@@ -25,7 +25,7 @@ SECRET_KEY = 'sun=u8f_#wk5j%6*z-*i(j_77#j)w9u16$7g@57#401re*=%x4'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 AUTH_USER_MODEL = "PM.MyUser"
 
@@ -79,7 +79,7 @@ WSGI_APPLICATION = 'Maintenance.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, 'db/db.sqlite3'),
     }
 }
 
