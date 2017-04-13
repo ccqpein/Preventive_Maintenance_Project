@@ -176,7 +176,11 @@
 				        </div>
 				        <div class="col-xs-9 text-right">
 					    <div class="huge">{{dpLeft}}</div>
-					    <div>Daily Report</div>
+                                            {% if request.user.is_staff %}
+					    <div>View Daily Report</div>
+                                            {%else%}
+					    <div>Add Daily Report</div>
+                                            {%endif%}
 				        </div>
 				    </div>
 			        </div>
@@ -195,7 +199,7 @@
 				        </div>
 				        <div class="col-xs-9 text-right">
 					    <div class="huge">{{ order_left }}</div>
-					    <div>Add Work Orders</div>
+					    <div>Add Orders Request</div>
 				        </div>
 				    </div>
 			        </div>

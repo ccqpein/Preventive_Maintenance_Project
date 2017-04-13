@@ -126,7 +126,8 @@ def addEquipment(request):
     )
     eq.save()
 
-    return render(request, 'PM/message.html', {'message': "save successful"})
+    return render(request, 'PM/message.html', {'message': "save successful",
+                                               'next': '/newequipment/'})
 
 
 @login_required(login_url="/login/")
@@ -153,7 +154,8 @@ def addMaintenance(request):
         ms.ms_next_main_date = datetime(dt.year, dt.month, dt.day)
         ms.save()
         return render(request, 'PM/message.html',
-                      {'message': "save successful"})
+                      {'message': "save successful",
+                       'next': '/addmaintenance/'})
     else:
         tools = [i.tool_name for i in EquipmentTool.objects.all()]
         return render(request, 'PM/NewMaintenance.html',
@@ -178,7 +180,8 @@ def viewMain(request, form_ID):
         ms.save()
 
         return render(request, 'PM/message.html',
-                      {'message': "submit successful"})
+                      {'message': "submit successful",
+                       'next': '/viewTasks/'})
     else:
         lines = model_to_dict(get_object_or_404(
             MaintenanceSchedule, id=form_ID))
@@ -191,7 +194,9 @@ def viewMain(request, form_ID):
         toolstemp = [(lines['ms_tools_name'].split(' -*- ')),
                      (lines['ms_tools_qty'].split(' -*- ')),
                      ]
+        print(toolstemp)
         toolstemp = list(zip(toolstemp[0], toolstemp[1]))
+        print(toolstemp)
 
         labels = lines['ms_form_names'].split(' -*- ')
         labels = list(filter(lambda x: x != '' and x != ' -*-', labels))
@@ -211,6 +216,9 @@ def viewMain(request, form_ID):
 @login_required(login_url="/login/")
 @permission_required('PM.add_dailyreport', login_url='/login/')
 def dailyReport(request):
+    if request.user.is_staff:
+        return HttpResponseRedirect('/admin/PM/dailyreport/')
+
     if request.method != 'GET':
         data = request.POST
         dr = DailyReport(
@@ -223,7 +231,8 @@ def dailyReport(request):
         )
         dr.save()
         return render(request, 'PM/message.html',
-                      {'message': "save successful"})
+                      {'message': "save successful",
+                       'next': '/report/'})
     else:
         return render(request, 'PM/dailyReport.html')
 
@@ -233,7 +242,6 @@ def dailyReport(request):
 def orderRequest(request):
     if request.method != 'GET':
         data = request.POST
-        print(data)
         od = Order(
             ord_date=data['dateReq'],
             ord_req_by=data['reqBy'],
@@ -245,12 +253,12 @@ def orderRequest(request):
             ord_work_ord=data['workOrder'],
             ord_date_issue=data['dateIssued'],
             ord_employee=data['employee'],
-            ord_comments=data['materialsused'],
         )
 
         od.save()
         return render(request, 'PM/message.html',
-                      {'message': "save successful"})
+                      {'message': "save successful",
+                       'next': '/order/'})
     else:
         return render(request, 'PM/order.html')
 
@@ -266,6 +274,7 @@ def viewTasks(request):
 
 def viewOrders(request, orderNumber):
     if request.method == 'GET':
+        print(request.path)
         od = Order.objects.get(id=orderNumber)
         checkMark = ""
         if od.ord_complete:
@@ -292,9 +301,11 @@ def viewOrders(request, orderNumber):
             od.ord_complete = True
         else:
             od.ord_complete = False
+        od.ord_comments = request.POST['materialsused']
         od.save()
         return render(request, 'PM/message.html',
-                      {'message': "save successful"})
+                      {'message': "save successful",
+                       'next': '/viewTasks/'})
 
 
 def viewEq(request, eqNumber):
@@ -320,7 +331,8 @@ def viewEq(request, eqNumber):
         eq.eq_next_main_date = datetime(dt.year, dt.month, dt.day)
         eq.save()
         return render(request, 'PM/message.html',
-                      {'message': "save successful"})
+                      {'message': "save successful",
+                       'next': '/viewTasks/'})
 
 
 def formTest(request):
