@@ -177,6 +177,17 @@ def viewMain(request, form_ID):
         print(data)
         ms = MaintenanceSchedule.objects.get(
             id=form_ID)
+
+        tools = list(t for t in ms.ms_tools_name.split(
+            ' -*- ') if t != '' and t != 'None')
+        toolsNum = list(ms.ms_tools_qty.split(' -*- '))
+        numbers = request.POST.getlist('toolback')
+
+        for i in range(len(tools)):
+            to = EquipmentTool.objects.get(tool_name=tools[i])
+            to.tool_quantity_left -= int(toolsNum[i]) - int(numbers[i])
+            to.save()
+
         mc = MaintenanceContent(
             mc_temp=ms,
             mc_content=" -*- ".join(request.POST.getlist('values')),
@@ -316,7 +327,17 @@ def viewOrders(request, orderNumber):
                        })
     else:
         od = Order.objects.get(id=orderNumber)
-        print(request.POST)
+
+        tools = list(t for t in od.ord_tools_name.split(
+            ' -*- ') if t != '' and t != 'None')
+        toolsNum = list(od.ord_tools_qty.split(' -*- '))
+        numbers = request.POST.getlist('toolback')
+
+        for i in range(len(tools)):
+            to = EquipmentTool.objects.get(tool_name=tools[i])
+            to.tool_quantity_left -= int(toolsNum[i]) - int(numbers[i])
+            to.save()
+
         if request.POST.get('complete'):
             od.ord_complete = True
         else:
@@ -337,7 +358,7 @@ def viewEq(request, eqNumber):
                      ]
 
         toolstemp = list(zip(toolstemp[0], toolstemp[1]))
-        print(toolstemp)
+
         content = {'eqNumber': eqNumber,
                    'name': eq.eq_name,
                    'serial_num': eq.eq_serial_num,
@@ -355,6 +376,16 @@ def viewEq(request, eqNumber):
                       content)
     else:
         eq = Equipment.objects.get(id=eqNumber)
+        tools = list(t for t in eq.eq_tools_name.split(
+            ' -*- ') if t != '' and t != 'None')
+        toolsNum = list(eq.eq_tools_qty.split(' -*- '))
+        numbers = request.POST.getlist('toolback')
+
+        for i in range(len(tools)):
+            to = EquipmentTool.objects.get(tool_name=tools[i])
+            to.tool_quantity_left -= int(toolsNum[i]) - int(numbers[i])
+            to.save()
+
         eq.eq_last_main_date = datetime.today()
         dt = datetime.today() + timedelta(eq.eq_maintenance_schedule * 7)
         eq.eq_next_main_date = datetime(dt.year, dt.month, dt.day)
