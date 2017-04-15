@@ -59,6 +59,18 @@
                                     </textarea>
                                 </div>
                                 </fieldset>
+
+                                <label>Tools Required</label>
+                                <div class='form-group'>
+                                    {%for i in toolstemp%}
+                                    <fieldset disabled>
+                                        <label>{{i.0}}</label>
+                                        <input class="form-control" name="unvalues" value="{{i.1}}" />
+                                    </fieldset>
+                                    <label>{{i.0}} Left</label>
+                                    <input class="form-control" name="toolback" type="number"\>
+                                    {%endfor%}
+                                </div>
                                 
                                 <button class="btn btn-default" type="reset" value="reset">Reset</button>
                                 <button class="btn btn-default" type="submit" value="submit">Submit</button>

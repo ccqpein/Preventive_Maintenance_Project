@@ -23,6 +23,9 @@ class Equipment(models.Model):
     eq_maintenance_schedule = models.IntegerField(default=1)  # number of week
     eq_contact_notes = models.CharField(max_length=100)
 
+    eq_tools_name = models.CharField(max_length=500)
+    eq_tools_qty = models.CharField(max_length=100)
+
     eq_add_date = models.DateField(auto_now=True)
     eq_last_main_date = models.DateField(null=True)
     eq_next_main_date = models.DateField(null=True)
@@ -39,6 +42,7 @@ class MaintenanceSchedule(models.Model):
     ms_date = models.DateField(auto_now=True)
     ms_serial_num = models.CharField(max_length=100)
     ms_inter_part = models.CharField(max_length=100)
+
     ms_tools_name = models.CharField(max_length=500)
     ms_tools_qty = models.CharField(max_length=100)
 
@@ -82,6 +86,9 @@ class Order(models.Model):
     ord_employee = models.CharField(max_length=100)
     ord_date_comp = models.DateField(null=True)
     ord_comments = models.CharField(max_length=1000)
+
+    ord_tools_name = models.CharField(max_length=500)
+    ord_tools_qty = models.CharField(max_length=500)
 
     ord_complete = models.BooleanField(default=False)
 

@@ -21,15 +21,17 @@ def taskLeft(time):
             ms_next_main_date=datetime.today())
         for c in od:
             resultList.append(
-                ("Work Order", c.ord_date, "", "/viewOrders/" + str(c.id) + "/"))
+                (c.ord_req_by, "Work Order", c.ord_date, "", "/viewOrders/" + str(c.id) + "/"))
 
         for c in eq:
-            resultList.append(("Equipment", c.eq_add_date, "Today",
-                               "/viewEq/" + str(c.id) + "/"))
+            resultList.append(
+                (c.eq_name, "Equipment", c.eq_add_date, "Today",
+                 "/viewEq/" + str(c.id) + "/"))
 
         for c in mainT:
-            resultList.append(("Maintenance", c.ms_date, "Today",
-                               "/viewMain/" + str(c.id) + "/"))
+            resultList.append(
+                (c.ms_name, "Maintenance", c.ms_date, "Today",
+                 "/viewMain/" + str(c.id) + "/"))
 
     else:
         eq = Equipment.objects.filter(
@@ -39,11 +41,11 @@ def taskLeft(time):
             ms_next_main_date__range=(datetime.today() + timedelta(days=1),
                                       datetime.today() + timedelta(weeks=4)))
         for c in eq:
-            resultList.append(("Equipment", c.eq_add_date, c.eq_next_main_date,
+            resultList.append((c.eq_name, "Equipment", c.eq_add_date, c.eq_next_main_date,
                                "/viewEq/" + str(c.id) + "/"))
 
         for c in mainT:
-            resultList.append(("Maintenance", c.ms_date, c.ms_next_main_date,
+            resultList.append((c.ms_name, "Maintenance", c.ms_date, c.ms_next_main_date,
                                "/viewMain/" + str(c.id) + "/"))
 
     return resultList
@@ -90,7 +92,6 @@ def register(request):
 
 
 @login_required(login_url="/login/")
-@permission_required('PM.view_Equipment', login_url='/login/')
 def result(request, serial_num):
     serial_num = request.GET['serialNum']
     equipment = get_object_or_404(Equipment, eq_serial_num=serial_num)
@@ -103,15 +104,16 @@ def result(request, serial_num):
 
 @login_required(login_url="/login/")
 def newEquipment(request):
-    return render(request, 'PM/NewEquipment.html')
+    tools = [i.tool_name for i in EquipmentTool.objects.all()]
+    return render(request, 'PM/NewEquipment.html',
+                  {'toolnames': tools})
 
 
 @login_required(login_url="/login/")
-# @permission_required('PM.view_Equipment', login_url='/login/')
+@permission_required('PM.add_equipment', login_url='/login/')
 def addEquipment(request):
     data = request.POST
 
-    print(data['warranty_expir_date'])
     eq = Equipment(
         eq_serial_num=data['serial_num'],
         eq_name=data['name'],
@@ -122,8 +124,16 @@ def addEquipment(request):
         eq_internal_part_num=data['internal_part_num'],
         eq_contact_notes=data['note'],
         eq_maintenance_schedule=data['schedule'],
-        eq_quantity_left=data['quantity_left']
+        eq_quantity_left=data['quantity_left'],
+
+        eq_tools_name=" -*- ".join(request.POST.getlist('ToolName')),
+        eq_tools_qty=" -*- ".join(request.POST.getlist('ToolQty')),
     )
+
+    dt = datetime.today() + \
+        timedelta(int(data['schedule']) * 7)
+    eq.eq_next_main_date = datetime(dt.year, dt.month, dt.day)
+    print(eq)
     eq.save()
 
     return render(request, 'PM/message.html', {'message': "save successful",
@@ -131,7 +141,6 @@ def addEquipment(request):
 
 
 @login_required(login_url="/login/")
-@permission_required('PM.view_Equipment', login_url='/login/')
 def addMaintenance(request):
     if request.method != 'GET':
         data = request.POST
@@ -185,18 +194,16 @@ def viewMain(request, form_ID):
     else:
         lines = model_to_dict(get_object_or_404(
             MaintenanceSchedule, id=form_ID))
-        print(lines)
 
-        temp = [('ms_name', lines['ms_name']),
+        temp = [('schedule name', lines['ms_name']),
                 ('serial number', lines['ms_serial_num']),
                 ('internal part number', lines['ms_inter_part']), ]
 
-        toolstemp = [(lines['ms_tools_name'].split(' -*- ')),
+        toolstemp = [(t for t in lines['ms_tools_name'].split(' -*- ') if t != ''),
                      (lines['ms_tools_qty'].split(' -*- ')),
                      ]
-        print(toolstemp)
+
         toolstemp = list(zip(toolstemp[0], toolstemp[1]))
-        print(toolstemp)
 
         labels = lines['ms_form_names'].split(' -*- ')
         labels = list(filter(lambda x: x != '' and x != ' -*-', labels))
@@ -204,7 +211,7 @@ def viewMain(request, form_ID):
         types = lines['ms_form_fields'].split(' -*- ')
         MT = [(labels[i], reqs[i], types[i]) for i in range(len(labels))]
 
-        print(MT)
+        print(toolstemp)
         return render(request, 'PM/Maintenance.html',
                       {'MT': MT,
                        'form_ID': form_ID,
@@ -253,6 +260,10 @@ def orderRequest(request):
             ord_work_ord=data['workOrder'],
             ord_date_issue=data['dateIssued'],
             ord_employee=data['employee'],
+
+            ord_tools_name=" -*- ".join(request.POST.getlist('ToolName')),
+            ord_tools_qty=" -*- ".join(request.POST.getlist('ToolQty')),
+
         )
 
         od.save()
@@ -260,7 +271,9 @@ def orderRequest(request):
                       {'message': "save successful",
                        'next': '/order/'})
     else:
-        return render(request, 'PM/order.html')
+        tools = [i.tool_name for i in EquipmentTool.objects.all()]
+        return render(request, 'PM/order.html',
+                      {'toolnames': tools, })
 
 
 def viewTasks(request):
@@ -268,7 +281,7 @@ def viewTasks(request):
         resultList = taskLeft(time='today')
         resultList2 = taskLeft(time='whatever')
         return render(request, 'PM/viewForm.html',
-                      {'titles': ["Type", "Add Date", 'Due Date', 'View'],
+                      {'titles': ["Name", "Type", "Add Date", 'Due Date', 'View'],
                        'content': resultList + resultList2})
 
 
@@ -279,6 +292,12 @@ def viewOrders(request, orderNumber):
         checkMark = ""
         if od.ord_complete:
             checkMark = "checked"
+
+        toolstemp = [(t for t in od.ord_tools_name.split(' -*- ') if t != '' and t != 'None'),
+                     (od.ord_tools_qty.split(' -*- ')),
+                     ]
+
+        toolstemp = list(zip(toolstemp[0], toolstemp[1]))
         return render(request, 'PM/viewOrders.html',
                       {'dateReq': od.ord_date,
                        'reqBy': od.ord_req_by,
@@ -293,6 +312,7 @@ def viewOrders(request, orderNumber):
                        'materialsused': od.ord_comments,
                        'orderNumber': orderNumber,
                        'complete': checkMark,
+                       'toolstemp': toolstemp,
                        })
     else:
         od = Order.objects.get(id=orderNumber)
@@ -311,6 +331,13 @@ def viewOrders(request, orderNumber):
 def viewEq(request, eqNumber):
     if request.method == 'GET':
         eq = Equipment.objects.get(id=eqNumber)
+
+        toolstemp = [(t for t in eq.eq_tools_name.split(' -*- ') if t != '' and t != 'None'),
+                     (eq.eq_tools_qty.split(' -*- ')),
+                     ]
+
+        toolstemp = list(zip(toolstemp[0], toolstemp[1]))
+        print(toolstemp)
         content = {'eqNumber': eqNumber,
                    'name': eq.eq_name,
                    'serial_num': eq.eq_serial_num,
@@ -320,7 +347,9 @@ def viewEq(request, eqNumber):
                    'manufacturer': eq.eq_manufacturer,
                    'internal_part_num': eq.eq_internal_part_num,
                    'schedule': eq.eq_maintenance_schedule,
-                   'note': eq.eq_contact_notes, }
+                   'note': eq.eq_contact_notes,
+                   'toolstemp': toolstemp,
+                   }
 
         return render(request, 'PM/viewEquipment.html',
                       content)
