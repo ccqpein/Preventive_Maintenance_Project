@@ -43,9 +43,22 @@
                                         <div class="form-group">
                                             {% for i in MT %}
                                             <label>{{ i.0 }}:</label>
-                                            <input class="form-control" name="values" type="{{i.2}}"/>
+                                            <input class="form-control" name="values" type="{{i.3}}" value="{{i.1}}"/>
                                             {% endfor %}
                                         </div>
+
+                                        <div class="form-group">
+                                            <label>Materials Used/Comments</label>
+                                            <textarea class="form-control" row="4" type="text" name="materialsused" > {{materialsused}}
+                                            </textarea>
+                                        </div>
+                                        
+                                        
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" name="complete" {{complete}}>Completed
+                                            </label>
+                                        </div>                                        
                                         <button class="btn btn-default" type="reset" value="reset">Reset</button>
                                         <button class="btn btn-default" type="submit" value="submit">Submit</button>
                                     </form>   

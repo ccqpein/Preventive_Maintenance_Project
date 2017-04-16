@@ -30,6 +30,8 @@ class Equipment(models.Model):
     eq_last_main_date = models.DateField(null=True)
     eq_next_main_date = models.DateField(null=True)
 
+    eq_main_comment = models.CharField(max_length=500)
+
 
 class EquipmentTool(models.Model):
     tool_name = models.CharField(max_length=100)
@@ -60,6 +62,9 @@ class MaintenanceContent(models.Model):
     mc_content = models.CharField(max_length=2000)
     mc_date = models.DateField(auto_now=True)
 
+    mc_main_comment = models.CharField(max_length=500)
+    mc_complete = models.BooleanField(default=False)
+
 
 class DailyReport(models.Model):
 
@@ -74,6 +79,8 @@ class DailyReport(models.Model):
 
 class Order(models.Model):
 
+    ord_serial_num = models.CharField(max_length=100)
+
     ord_date = models.DateField(auto_now=True)
     ord_req_by = models.CharField(max_length=50)
     ord_building = models.CharField(max_length=100)
@@ -84,11 +91,13 @@ class Order(models.Model):
     ord_work_ord = models.CharField(max_length=50)
     ord_date_issue = models.DateField()
     ord_employee = models.CharField(max_length=100)
-    ord_date_comp = models.DateField(null=True)
+    ord_date_comp = models.DateField(null=True, blank=True)
     ord_comments = models.CharField(max_length=1000)
 
     ord_tools_name = models.CharField(max_length=500)
     ord_tools_qty = models.CharField(max_length=500)
+
+    ord_assign = models.ForeignKey(MyUser)
 
     ord_complete = models.BooleanField(default=False)
 

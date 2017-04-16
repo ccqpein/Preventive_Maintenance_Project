@@ -8,9 +8,10 @@ from django.forms.models import model_to_dict
 from .models import Equipment, EquipmentTool, DailyReport, Order, MyUser, MaintenanceContent, MaintenanceSchedule
 from .forms import RegisterFrom
 from datetime import datetime, timedelta
+import random
 
 
-def taskLeft(time):
+def taskLeft(time, request):
     resultList = []
     od = Order.objects.filter(ord_complete=False)
 
@@ -21,7 +22,7 @@ def taskLeft(time):
             ms_next_main_date=datetime.today())
         for c in od:
             resultList.append(
-                (c.ord_req_by, "Work Order", c.ord_date, "", "/viewOrders/" + str(c.id) + "/"))
+                (c.ord_req_by + str(' (for you)' if c.ord_assign == request.user else ''), "Work Order", c.ord_date, "", "/viewOrders/" + str(c.id) + "/"))
 
         for c in eq:
             resultList.append(
@@ -62,7 +63,7 @@ def index(request):
     else:
         dailyReportLeft = len(DailyReport.objects.filter(
             dp_date=datetime.today()))
-    tasks = taskLeft('today')
+    tasks = taskLeft('today', request)
     print(request.user)
     return render(request, 'PM/index.html',
                   {'order_left': orderLeft,
@@ -188,12 +189,23 @@ def viewMain(request, form_ID):
             to.tool_quantity_left -= int(toolsNum[i]) - int(numbers[i])
             to.save()
 
-        mc = MaintenanceContent(
-            mc_temp=ms,
-            mc_content=" -*- ".join(request.POST.getlist('values')),
-        )
-        mc.save()
+        if len(ms.maintenancecontent_set.all()) == 0 \
+           or ms.maintenancecontent_set.all().last().mc_complete:
+            mc = MaintenanceContent(
+                mc_temp=ms,
+                mc_content=" -*- ".join(request.POST.getlist('values')),
+                mc_complete=True if request.POST.get('complete') else False
+            )
+        else:
+            mc = ms.maintenancecontent_set.all().last()
 
+        mc.mc_main_comment = data['materialsused']
+
+        if not request.POST.get('complete'):
+            mc.save()
+            return HttpResponseRedirect('/viewTasks/')
+
+        mc.mc_complete = True
         ms.ms_last_main_date = datetime.today()
         dt = datetime.today() + timedelta(ms.ms_maintenance_schedule * 7)
         ms.ms_next_main_date = datetime(dt.year, dt.month, dt.day)
@@ -203,32 +215,46 @@ def viewMain(request, form_ID):
                       {'message': "submit successful",
                        'next': '/viewTasks/'})
     else:
-        lines = model_to_dict(get_object_or_404(
-            MaintenanceSchedule, id=form_ID))
+        ms = get_object_or_404(MaintenanceSchedule, id=form_ID)
+        lines = model_to_dict(ms)
 
         temp = [('schedule name', lines['ms_name']),
                 ('serial number', lines['ms_serial_num']),
                 ('internal part number', lines['ms_inter_part']), ]
 
-        toolstemp = [(t for t in lines['ms_tools_name'].split(' -*- ') if t != ''),
-                     (lines['ms_tools_qty'].split(' -*- ')),
+        toolstemp = [(t for t in lines['ms_tools_name'].split(' -*- ') if t != '' and t != 'None'),
+                     (t for t in lines['ms_tools_qty'].split(
+                         ' -*- ') if t != 'None'),
                      ]
-
         toolstemp = list(zip(toolstemp[0], toolstemp[1]))
 
         labels = lines['ms_form_names'].split(' -*- ')
         labels = list(filter(lambda x: x != '' and x != ' -*-', labels))
         reqs = lines['ms_form_reqs'].split(' -*- ')
         types = lines['ms_form_fields'].split(' -*- ')
-        MT = [(labels[i], reqs[i], types[i]) for i in range(len(labels))]
 
-        print(toolstemp)
+        if len(ms.maintenancecontent_set.all()) == 0:
+            comment = ""
+            values = ['' for i in range(len(labels))]
+        elif not ms.maintenancecontent_set.all().last().mc_complete:
+            comment = ms.maintenancecontent_set.all().last().mc_main_comment
+            values = ms.maintenancecontent_set.all().last().mc_content\
+                                                           .split(' -*- ')
+            print("g")
+        else:
+            comment = ""
+            values = ['' for i in range(len(labels))]
+
+        MT = [(labels[i], values[i], reqs[i], types[i])
+              for i in range(len(labels))]
+        print(MT)
         return render(request, 'PM/Maintenance.html',
                       {'MT': MT,
                        'form_ID': form_ID,
                        'toolstemp': toolstemp,
                        'mainName': lines['ms_name'],
-                       'temp': temp})
+                       'temp': temp,
+                       'materialsused': comment})
 
 
 @login_required(login_url="/login/")
@@ -283,14 +309,16 @@ def orderRequest(request):
                        'next': '/order/'})
     else:
         tools = [i.tool_name for i in EquipmentTool.objects.all()]
+        ordNum = 'W' + datetime.now().strftime("%b%d%y") + str(random.randint(0, 50))
         return render(request, 'PM/order.html',
-                      {'toolnames': tools, })
+                      {'toolnames': tools,
+                       'ordNum': ordNum})
 
 
 def viewTasks(request):
     if request.method == 'GET':
-        resultList = taskLeft(time='today')
-        resultList2 = taskLeft(time='whatever')
+        resultList = taskLeft('today', request)
+        resultList2 = taskLeft('whatever', request)
         return render(request, 'PM/viewForm.html',
                       {'titles': ["Name", "Type", "Add Date", 'Due Date', 'View'],
                        'content': resultList + resultList2})
@@ -326,6 +354,7 @@ def viewOrders(request, orderNumber):
                        'toolstemp': toolstemp,
                        })
     else:
+        print(request.POST)
         od = Order.objects.get(id=orderNumber)
 
         tools = list(t for t in od.ord_tools_name.split(
@@ -338,11 +367,14 @@ def viewOrders(request, orderNumber):
             to.tool_quantity_left -= int(toolsNum[i]) - int(numbers[i])
             to.save()
 
-        if request.POST.get('complete'):
-            od.ord_complete = True
-        else:
-            od.ord_complete = False
         od.ord_comments = request.POST['materialsused']
+
+        if not request.POST.get('complete'):
+            od.ord_complete = False
+            od.save()
+            return HttpResponseRedirect('/viewTasks/')
+
+        od.ord_complete = True
         od.save()
         return render(request, 'PM/message.html',
                       {'message': "save successful",
@@ -370,12 +402,19 @@ def viewEq(request, eqNumber):
                    'schedule': eq.eq_maintenance_schedule,
                    'note': eq.eq_contact_notes,
                    'toolstemp': toolstemp,
+                   'materialsused': eq.eq_main_comment,
                    }
 
         return render(request, 'PM/viewEquipment.html',
                       content)
     else:
         eq = Equipment.objects.get(id=eqNumber)
+        print(request.POST)
+        if not request.POST.get('complete'):
+            eq.eq_main_comment = request.POST['materialsused']
+            eq.save()
+            return HttpResponseRedirect('/viewTasks/')
+
         tools = list(t for t in eq.eq_tools_name.split(
             ' -*- ') if t != '' and t != 'None')
         toolsNum = list(eq.eq_tools_qty.split(' -*- '))
@@ -389,6 +428,7 @@ def viewEq(request, eqNumber):
         eq.eq_last_main_date = datetime.today()
         dt = datetime.today() + timedelta(eq.eq_maintenance_schedule * 7)
         eq.eq_next_main_date = datetime(dt.year, dt.month, dt.day)
+        eq.eq_main_comment = ''
         eq.save()
         return render(request, 'PM/message.html',
                       {'message': "save successful",

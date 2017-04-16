@@ -20,6 +20,9 @@
                                 {% csrf_token %}
 
                                 <div class="form-group">
+                                    <label>Order number</label>
+                                    <input class="form-control" type="text" name="ordNum" value="{{ordNum}}"/>
+                                    
                                     <label>Date Requested:</label>
                                     <input class="form-control" type="date" name="dateReq"/>
 
