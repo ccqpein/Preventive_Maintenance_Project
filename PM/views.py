@@ -184,11 +184,6 @@ def viewMain(request, form_ID):
         toolsNum = list(ms.ms_tools_qty.split(' -*- '))
         numbers = request.POST.getlist('toolback')
 
-        for i in range(len(tools)):
-            to = EquipmentTool.objects.get(tool_name=tools[i])
-            to.tool_quantity_left -= int(toolsNum[i]) - int(numbers[i])
-            to.save()
-
         if len(ms.maintenancecontent_set.all()) == 0 \
            or ms.maintenancecontent_set.all().last().mc_complete:
             mc = MaintenanceContent(
@@ -199,11 +194,17 @@ def viewMain(request, form_ID):
         else:
             mc = ms.maintenancecontent_set.all().last()
 
+        mc.mc_content = " -*- ".join(request.POST.getlist('values'))
         mc.mc_main_comment = data['materialsused']
 
         if not request.POST.get('complete'):
             mc.save()
             return HttpResponseRedirect('/viewTasks/')
+
+        for i in range(len(tools)):
+            to = EquipmentTool.objects.get(tool_name=tools[i])
+            to.tool_quantity_left -= int(toolsNum[i]) - int(numbers[i])
+            to.save()
 
         mc.mc_complete = True
         ms.ms_last_main_date = datetime.today()
@@ -240,7 +241,6 @@ def viewMain(request, form_ID):
             comment = ms.maintenancecontent_set.all().last().mc_main_comment
             values = ms.maintenancecontent_set.all().last().mc_content\
                                                            .split(' -*- ')
-            print("g")
         else:
             comment = ""
             values = ['' for i in range(len(labels))]
@@ -362,17 +362,17 @@ def viewOrders(request, orderNumber):
         toolsNum = list(od.ord_tools_qty.split(' -*- '))
         numbers = request.POST.getlist('toolback')
 
-        for i in range(len(tools)):
-            to = EquipmentTool.objects.get(tool_name=tools[i])
-            to.tool_quantity_left -= int(toolsNum[i]) - int(numbers[i])
-            to.save()
-
         od.ord_comments = request.POST['materialsused']
 
         if not request.POST.get('complete'):
             od.ord_complete = False
             od.save()
             return HttpResponseRedirect('/viewTasks/')
+
+        for i in range(len(tools)):
+            to = EquipmentTool.objects.get(tool_name=tools[i])
+            to.tool_quantity_left -= int(toolsNum[i]) - int(numbers[i])
+            to.save()
 
         od.ord_complete = True
         od.save()
@@ -386,7 +386,8 @@ def viewEq(request, eqNumber):
         eq = Equipment.objects.get(id=eqNumber)
 
         toolstemp = [(t for t in eq.eq_tools_name.split(' -*- ') if t != '' and t != 'None'),
-                     (eq.eq_tools_qty.split(' -*- ')),
+                     (t for t in eq.eq_tools_qty.split(
+                         ' -*- ') if t != '' and t != 'None'),
                      ]
 
         toolstemp = list(zip(toolstemp[0], toolstemp[1]))
