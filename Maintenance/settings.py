@@ -25,7 +25,7 @@ SECRET_KEY = 'sun=u8f_#wk5j%6*z-*i(j_77#j)w9u16$7g@57#401re*=%x4'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.99.100']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.99.100', '73.99.10.233']
 
 AUTH_USER_MODEL = "PM.MyUser"
 
