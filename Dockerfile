@@ -1,6 +1,7 @@
 FROM django:latest
 
 WORKDIR ./
+VOLUME /db
 COPY Maintenance /Maintenance
 COPY PM /PM
 COPY manage.py /manage.py

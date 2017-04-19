@@ -6,7 +6,6 @@ from django.forms.models import model_to_dict
 # Create your views here.
 # from django.contrib.auth.models import User
 from .models import Equipment, EquipmentTool, DailyReport, Order, MyUser, MaintenanceContent, MaintenanceSchedule
-from .forms import RegisterFrom
 from datetime import datetime, timedelta
 import random
 
@@ -57,6 +56,9 @@ def index(request):
     orderLeft = Order.objects.filter(ord_complete=False).count()
     equipmentLeft = len(Equipment.objects.all())
     maintenanceLeft = len(MaintenanceSchedule.objects.all())
+    eqtoolsLeft = len(EquipmentTool.objects.filter(
+        tool_quantity_left__range=(0, 5)))
+
     if not request.user.is_staff:
         dailyReportLeft = len(DailyReport.objects.filter(
             dp_date=datetime.today(), dp_user=request.user))
@@ -64,43 +66,15 @@ def index(request):
         dailyReportLeft = len(DailyReport.objects.filter(
             dp_date=datetime.today()))
     tasks = taskLeft('today', request)
-    print(request.user)
+
     return render(request, 'PM/index.html',
                   {'order_left': orderLeft,
                    'eq_left': equipmentLeft,
                    'mainLeft': maintenanceLeft,
                    'dpLeft': dailyReportLeft,
-                   'all_left': len(tasks)}
+                   'all_left': len(tasks),
+                   'toolalarm': eqtoolsLeft}
                   )
-
-
-def register(request):
-    if request.method == 'POST':
-        form = RegisterFrom(request.POST)
-        if form.is_valid():
-            user = MyUser.objects.create_user(username=form.data["username"],
-                                              first_name=form.data["f_name"],
-                                              last_name=form.data["l_name"],
-                                              email=form.data["email"],
-                                              phone=form.data["phone"],
-                                              password=form.data["passw"],
-                                              note=form.data["note"])
-            user.save()
-            return HttpResponseRedirect("/login/")
-    else:
-        form = RegisterFrom()
-    return render(request, "registration/register.html", {'form': form})
-
-
-@login_required(login_url="/login/")
-def result(request, serial_num):
-    serial_num = request.GET['serialNum']
-    equipment = get_object_or_404(Equipment, eq_serial_num=serial_num)
-    return render(request, 'PM/result.html', {
-        'serial_number': serial_num,
-        'object_name': equipment.eq_name,
-        'left': equipment.eq_quantity_left,
-    })
 
 
 @login_required(login_url="/login/")
@@ -142,6 +116,7 @@ def addEquipment(request):
 
 
 @login_required(login_url="/login/")
+@permission_required('PM.add_maintenanceschedule', login_url='/login/')
 def addMaintenance(request):
     if request.method != 'GET':
         data = request.POST
@@ -170,6 +145,64 @@ def addMaintenance(request):
         tools = [i.tool_name for i in EquipmentTool.objects.all()]
         return render(request, 'PM/NewMaintenance.html',
                       {'toolnames': tools, })
+
+
+@login_required(login_url="/login/")
+@permission_required('PM.add_dailyreport', login_url='/login/')
+def dailyReport(request):
+    if request.user.is_staff:
+        return HttpResponseRedirect('/admin/PM/dailyreport/')
+
+    if request.method != 'GET':
+        data = request.POST
+        dr = DailyReport(
+            dp_name=data['name'],
+            dp_shift=data['shift'],
+            dp_date=data['date'],
+            dp_work_performed=data['workperformed'],
+            dp_problems_ident=data['problems'],
+            dp_user=request.user,
+        )
+        dr.save()
+        return render(request, 'PM/message.html',
+                      {'message': "save successful",
+                       'next': '/report/'})
+    else:
+        return render(request, 'PM/dailyReport.html')
+
+
+@login_required(login_url="/login/")
+@permission_required('PM.add_order', login_url='/login/')
+def orderRequest(request):
+    if request.method != 'GET':
+        data = request.POST
+        od = Order(
+            ord_date=data['dateReq'],
+            ord_req_by=data['reqBy'],
+            ord_building=data['building'],
+            ord_floor=data['floor'],
+            ord_room=data['room'],
+            ord_supervisor=data['supervisor'],
+            ord_work_req=data['workrequested'],
+            ord_work_ord=data['workOrder'],
+            ord_date_issue=data['dateIssued'],
+            ord_employee=data['employee'],
+
+            ord_tools_name=" -*- ".join(request.POST.getlist('ToolName')),
+            ord_tools_qty=" -*- ".join(request.POST.getlist('ToolQty')),
+
+        )
+
+        od.save()
+        return render(request, 'PM/message.html',
+                      {'message': "save successful",
+                       'next': '/order/'})
+    else:
+        tools = [i.tool_name for i in EquipmentTool.objects.all()]
+        ordNum = 'W' + datetime.now().strftime("%b%d%y") + str(random.randint(0, 50))
+        return render(request, 'PM/order.html',
+                      {'toolnames': tools,
+                       'ordNum': ordNum})
 
 
 def viewMain(request, form_ID):
@@ -255,64 +288,6 @@ def viewMain(request, form_ID):
                        'mainName': lines['ms_name'],
                        'temp': temp,
                        'materialsused': comment})
-
-
-@login_required(login_url="/login/")
-@permission_required('PM.add_dailyreport', login_url='/login/')
-def dailyReport(request):
-    if request.user.is_staff:
-        return HttpResponseRedirect('/admin/PM/dailyreport/')
-
-    if request.method != 'GET':
-        data = request.POST
-        dr = DailyReport(
-            dp_name=data['name'],
-            dp_shift=data['shift'],
-            dp_date=data['date'],
-            dp_work_performed=data['workperformed'],
-            dp_problems_ident=data['problems'],
-            dp_user=request.user,
-        )
-        dr.save()
-        return render(request, 'PM/message.html',
-                      {'message': "save successful",
-                       'next': '/report/'})
-    else:
-        return render(request, 'PM/dailyReport.html')
-
-
-@login_required(login_url="/login/")
-@permission_required('PM.add_order', login_url='/login/')
-def orderRequest(request):
-    if request.method != 'GET':
-        data = request.POST
-        od = Order(
-            ord_date=data['dateReq'],
-            ord_req_by=data['reqBy'],
-            ord_building=data['building'],
-            ord_floor=data['floor'],
-            ord_room=data['room'],
-            ord_supervisor=data['supervisor'],
-            ord_work_req=data['workrequested'],
-            ord_work_ord=data['workOrder'],
-            ord_date_issue=data['dateIssued'],
-            ord_employee=data['employee'],
-
-            ord_tools_name=" -*- ".join(request.POST.getlist('ToolName')),
-            ord_tools_qty=" -*- ".join(request.POST.getlist('ToolQty')),
-
-        )
-
-        od.save()
-        return render(request, 'PM/message.html',
-                      {'message': "save successful",
-                       'next': '/order/'})
-    else:
-        tools = [i.tool_name for i in EquipmentTool.objects.all()]
-        ordNum = 'W' + datetime.now().strftime("%b%d%y") + str(random.randint(0, 50))
-        return render(request, 'PM/order.html',
-                      {'toolnames': tools,
-                       'ordNum': ordNum})
 
 
 def viewTasks(request):
@@ -434,9 +409,3 @@ def viewEq(request, eqNumber):
         return render(request, 'PM/message.html',
                       {'message': "save successful",
                        'next': '/viewTasks/'})
-
-
-def formTest(request):
-    return render(request, 'PM/viewForm.html',
-                  {'titles': [1, 2, 3, 4, 5],
-                   'content': [(11, 22, 33, 44)]})

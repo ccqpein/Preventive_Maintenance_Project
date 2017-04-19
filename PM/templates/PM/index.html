@@ -147,26 +147,6 @@
                         </a>
                     </div>
                     {% endif %}
-                    <!-- 
-                    {% if perms.PM.add_checklist %}
-                    <div class="col-lg-3 col-md-6">
-		        <a href=#>
-			    <div class="panel panel-yellow">
-			        <div class="panel-heading">
-				    <div class="row">
-				        <div class="col-xs-3">
-					    <i class="fa fa-steam fa-5x"></i>
-				        </div>
-				        <div class="col-xs-9 text-right">
-					    <div class="huge">12</div>
-					    <div>CheckList</div>
-				        </div>
-				    </div>
-			        </div>
-                            </div> 
-                        </a>
-                    </div>
-                    {% endif %} -->
                     {% if perms.PM.add_dailyreport %}        
                     <div class="col-lg-3 col-md-6">
 		        <a href="{% url 'PM:dailyreport' %}">
@@ -230,26 +210,7 @@
                     </div>
                     {% endif %}
                     
-                    <!-- 
-                    {%if perms.PM.add_safetycheck %}
-                    <div class="col-lg-3 col-md-6">
-		        <a href=#>
-			    <div class="panel panel-yellow">
-			        <div class="panel-heading">
-				    <div class="row">
-				        <div class="col-xs-3">
-					    <i class="fa fa-steam fa-5x"></i>
-				        </div>
-				        <div class="col-xs-9 text-right">
-					    <div class="huge">12</div>
-					    <div>Safety Check</div>
-				        </div>
-				    </div>
-			        </div>
-                            </div> 
-                        </a>
-                    </div>
-                    {% endif %} -->
+
                 </div>
                 <!-- /.row -->
                 <div class="row">
@@ -294,6 +255,26 @@
                     </div>
                     <!-- /.panel -->
                 </div>
+
+                <div class="col-rg-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading" id="napnel">
+                            <i class="fa fa-bell fa-fw"></i> Notifications
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="list-group">
+                                <a href="/admin/PM/equipmenttool/" class="list-group-item">
+                                    <i class="fa fa-comment fa-fw"></i> {{toolalarm}} Tools Need Purchase 
+                                </a>
+                            </div>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-4 -->
+            </div>
                 <!-- /.col-lg-8 -->
                 <!-- <div class="col-rg-4">
                     <div class="panel panel-default">
