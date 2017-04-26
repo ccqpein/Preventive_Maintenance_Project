@@ -30,7 +30,7 @@ class Equipment(models.Model):
     eq_last_main_date = models.DateField(null=True)
     eq_next_main_date = models.DateField(null=True)
 
-    eq_main_comment = models.CharField(max_length=500)
+    eq_main_comment = models.CharField(max_length=500, blank=True)
 
 
 class EquipmentTool(models.Model):
