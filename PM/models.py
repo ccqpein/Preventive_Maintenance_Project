@@ -97,7 +97,7 @@ class Order(models.Model):
     ord_tools_name = models.CharField(max_length=500)
     ord_tools_qty = models.CharField(max_length=500)
 
-    ord_assign = models.ForeignKey(MyUser)
+    ord_assign = models.ForeignKey(MyUser, null=True, blank=True)
 
     ord_complete = models.BooleanField(default=False)
 
