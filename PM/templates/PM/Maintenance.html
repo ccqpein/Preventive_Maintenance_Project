@@ -43,7 +43,7 @@
                                         <div class="form-group">
                                             {% for i in MT %}
                                             <label>{{ i.0 }}:</label>
-                                            <input class="form-control" name="values" type="{{i.3}}" value="{{i.1}}"/>
+                                            <input class="form-control" name="values" type="{{i.3}}" value="{{i.1}}" {% if i.2 == 'Yes'%} required {%endif%}/>
                                             {% endfor %}
                                         </div>
 

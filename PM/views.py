@@ -176,6 +176,7 @@ def dailyReport(request):
 def orderRequest(request):
     if request.method != 'GET':
         data = request.POST
+        print(data)
         od = Order(
             ord_date=data['dateReq'],
             ord_req_by=data['reqBy'],
@@ -199,7 +200,8 @@ def orderRequest(request):
                        'next': '/order/'})
     else:
         tools = [i.tool_name for i in EquipmentTool.objects.all()]
-        ordNum = 'W' + datetime.now().strftime("%b%d%y") + str(random.randint(0, 50))
+        ordNum = 'W' + datetime.now().strftime("%b%d%y%I%M") + \
+            str(random.randint(0, 50))
         return render(request, 'PM/order.html',
                       {'toolnames': tools,
                        'ordNum': ordNum})
