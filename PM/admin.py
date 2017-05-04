@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth.models import Permission
 
 # Register your models here.
 from .models import Equipment, EquipmentTool, DailyReport, Order, MyUser, MaintenanceSchedule, MaintenanceContent
@@ -84,3 +85,4 @@ admin.site.register(Order, OrderAdmin)
 admin.site.register(MaintenanceSchedule, MaintenanceScheduleAdmin)
 admin.site.register(MaintenanceContent, MaintenanceContentAdmin)
 admin.site.register(MyUser, CustomUserAdmin)
+# admin.site.register(Permission)

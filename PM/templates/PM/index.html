@@ -190,7 +190,8 @@
                     </div>
                     {% endif %}
 
-                    {%if perms.PM.add_dailyreport %}
+                    {% load user_group %}
+                    {% if not request.user|has_group:"secretary" %}
                     <div class="col-lg-3 col-md-6">
 		        <a href="{% url 'PM:viewTasks' %}">
 			    <div class="panel panel-primary">
@@ -209,18 +210,14 @@
                         </a>
                     </div>
                     {% endif %}
-                    
-
                 </div>
                 <!-- /.row -->
                 <div class="row">
                     <div class="col-lg-12">
 		        <div class="panel-heading">
-                            
                         </div>
                         <!-- /.panel -->
                         <div class="panel panel-default">
-                            
                             <!-- /.panel-heading -->
                             <div class="panel-body">
                                 <div class="row">
@@ -255,7 +252,7 @@
                     </div>
                     <!-- /.panel -->
                 </div>
-
+                {% if request.user.is_staff %}
                 <div class="col-rg-4">
                     <div class="panel panel-default">
                         <div class="panel-heading" id="napnel">
@@ -273,6 +270,7 @@
                     </div>
                     <!-- /.panel -->
                 </div>
+                {%endif%}
                 <!-- /.col-lg-4 -->
             </div>
                 <!-- /.col-lg-8 -->
